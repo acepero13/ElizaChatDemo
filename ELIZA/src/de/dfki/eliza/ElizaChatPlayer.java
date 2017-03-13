@@ -5,6 +5,7 @@
  */
 package de.dfki.eliza;
 
+import de.dfki.eliza.chat.ChatController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,10 @@ public class ElizaChatPlayer extends Application {
         playerRoot.setStyle("-fx-background-image: url('" + image + "'); " +
                             "-fx-background-position: center center; " +
                             "-fx-background-repeat: stretch;");
-
+        
+        PlayerController controller = loader.getController();
+        controller.setPlayerApp(this);
+        
         Scene scene = new Scene(playerRoot);
         scene.getStylesheets().add("de/dfki/eliza/Style.css");
         primaryStage.setScene(scene);
@@ -50,6 +54,12 @@ public class ElizaChatPlayer extends Application {
         primaryStage.setX(0);
         primaryStage.show();
     }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+    
+    
 
     /**
      * @param args the command line arguments
