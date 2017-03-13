@@ -5,16 +5,20 @@
  */
 package de.dfki.eliza;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  *
@@ -37,6 +41,9 @@ public class PlayerController implements Initializable{
     String imagePath;
     Image image;
     ImageView playImageView;
+    
+    private Stage chatStage;
+    private AnchorPane chatRoot;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,6 +69,11 @@ public class PlayerController implements Initializable{
             image = new Image(imagePath);
             playImageView = new ImageView(image);
             playButton.setGraphic(playImageView);
+            
+        });
+        
+        openFileButton.setOnAction((event) -> {
+            OpenChat();
         });
         
         SpinnerValueFactory<Integer> valueFactory = 
@@ -71,6 +83,23 @@ public class PlayerController implements Initializable{
         playerSpinner.setOnMouseClicked((event) -> {
             spinnerCurrentValue = playerSpinner.getValue();
         });
+    }
+    
+    private void OpenChat()
+    {
+        chatStage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ElizaChatPlayer.class.getResource("/de/dfki/eliza/chat/Chat.fxml"));
+        try {
+            chatRoot = (AnchorPane) loader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        Scene scene = new Scene(chatRoot);
+        chatStage.setScene(scene);
+        chatStage.setX(600);
+        chatStage.show();
     }
 
     public int getSpinnerCurrentValue() {

@@ -6,16 +6,10 @@
 package de.dfki.eliza;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -53,6 +47,7 @@ public class ElizaChatPlayer extends Application {
         scene.getStylesheets().add("de/dfki/eliza/Style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+        primaryStage.setX(0);
         primaryStage.show();
     }
 
