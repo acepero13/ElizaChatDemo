@@ -5,11 +5,16 @@
  */
 package de.dfki.eliza;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -19,25 +24,35 @@ import javafx.stage.Stage;
  */
 public class ElizaChatPlayer extends Application {
     
+    private Stage primaryStage;
+    private AnchorPane playerRoot = null;
+    
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
+        this.primaryStage = primaryStage;
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        initStage();
+    }
+    
+    private void initStage()
+    {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ElizaChatPlayer.class.getResource("player.fxml"));
+        try {
+            playerRoot = (AnchorPane) loader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         
-        Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
+        String image = getClass().getClassLoader().getResource("playerBG.jpg").toExternalForm();
+        playerRoot.setStyle("-fx-background-image: url('" + image + "'); " +
+                            "-fx-background-position: center center; " +
+                            "-fx-background-repeat: stretch;");
+
+        Scene scene = new Scene(playerRoot);
+        scene.getStylesheets().add("de/dfki/eliza/Style.css");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
