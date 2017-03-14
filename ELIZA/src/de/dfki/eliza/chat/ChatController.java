@@ -61,8 +61,10 @@ public class ChatController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         chatGridPane = new GridPane();
-        chatScrollPane.setContent(chatGridPane);
         
+        chatScrollPane.setContent(chatGridPane);
+//        chatGridPane.prefHeightProperty().bind(chatScrollPane.heightProperty());
+        chatGridPane.setStyle("-fx-background-color: linear-gradient(to top, #F0F9FF, #B6DDFF);");
         testButton.setOnAction((event) -> {
             chatScrollPane.setVvalue(1.0);
             label = new Label(text);
