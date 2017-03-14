@@ -163,7 +163,7 @@ public class PlayerController implements Initializable {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ElizaChatPlayer.class.getResource("/de/dfki/eliza/chat/Chat.fxml"));
         try {
-            chatRoot = (AnchorPane) loader.load();
+            chatRoot = loader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

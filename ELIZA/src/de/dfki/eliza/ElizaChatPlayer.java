@@ -34,7 +34,7 @@ public class ElizaChatPlayer extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ElizaChatPlayer.class.getResource("player.fxml"));
         try {
-            playerRoot = (AnchorPane) loader.load();
+            playerRoot = loader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
