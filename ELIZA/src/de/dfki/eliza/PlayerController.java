@@ -78,6 +78,7 @@ public class PlayerController implements Initializable {
     private ScrollPane chatScrollPane;
     private GridPane chatGridPane;
     Label messages;
+    File file;
 
     //****************TEST***************//
     String text = "Beka";
@@ -99,20 +100,23 @@ public class PlayerController implements Initializable {
 
         playButton.setOnAction((event) -> {
             openedLabel.setVisible(false);
-            if (!isPlayButtonClicked) {
-                isPlayButtonClicked = !isPlayButtonClicked;
-                imagePath = getClass().getClassLoader().getResource("stop.png").toExternalForm();
+            if (file != null) {
+                if (!isPlayButtonClicked) {
+                    isPlayButtonClicked = !isPlayButtonClicked;
+                    imagePath = getClass().getClassLoader().getResource("stop.png").toExternalForm();
 
-            } else {
-                isPlayButtonClicked = !isPlayButtonClicked;
-                imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
+                } else {
+                    isPlayButtonClicked = !isPlayButtonClicked;
+                    imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
+                }
+
+                image = new Image(imagePath);
+                playImageView = new ImageView(image);
+                playButton.setGraphic(playImageView);
+
+                handleChatMessages();
             }
 
-            image = new Image(imagePath);
-            playImageView = new ImageView(image);
-            playButton.setGraphic(playImageView);
-
-            handleChatMessages();
         });
 
         openFileButton.setOnAction((event) -> {
@@ -136,7 +140,7 @@ public class PlayerController implements Initializable {
         fileChooser.getExtensionFilters().add(extFilter);
 
         // Show open file dialog
-        File file = fileChooser.showOpenDialog(elizaChatPlayer.getPrimaryStage());
+        file = fileChooser.showOpenDialog(elizaChatPlayer.getPrimaryStage());
         if (file != null) {
             String filename = file.getAbsolutePath();
             OpenChat();
@@ -154,6 +158,7 @@ public class PlayerController implements Initializable {
 
     private void OpenChat() {
         chatStage = new Stage();
+        chatStage.setTitle("chat");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ElizaChatPlayer.class.getResource("/de/dfki/eliza/chat/Chat.fxml"));
         try {
@@ -177,11 +182,12 @@ public class PlayerController implements Initializable {
                     Path face;
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
-                    chatScrollPane.setVvalue(1.0);
+                    chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
+//                    chatScrollPane.setVvalue(1.0);
                     messages = new Label(text);
                     messages.setWrapText(true);
                     messages.setPadding(new Insets(5, 5, 5, 5));
-                    messages.setMaxWidth(600);
+                    messages.setMaxWidth(800);
 
                     colIndex = colIndex % 2;
 //                    messages.setStyle("-fx-background-color: red; -fx-border-color: black;  -fx-border-radius: 10 10 10 10;\n"
@@ -209,7 +215,7 @@ public class PlayerController implements Initializable {
                                 + "-fx-border-color: #9FD9FF;  "
                                 + "-fx-border-radius: 10 10 10 10;\n"
                                 + "-fx-background-radius: 10 10 10 10;");
-                        
+
                         box.setAlignment(Pos.CENTER_RIGHT);
                         GridPane.setHalignment(box, HPos.RIGHT);
                         cc.setHalignment(HPos.RIGHT);
@@ -261,7 +267,7 @@ public class PlayerController implements Initializable {
         p.setTranslateX(2);
         p.setFill(color);
         p.setStroke(color);
-        
+
         return p;
     }
 
@@ -285,9 +291,8 @@ public class PlayerController implements Initializable {
         fadeTransition.setCycleCount(1);
         fadeTransition.setAutoReverse(false);
     }
-    
-    private void handleOpenedLabel()
-    {
+
+    private void handleOpenedLabel() {
         FadeTransition labelfade = new FadeTransition(Duration.millis(500));
         labelfade.setNode(openedLabel);
         labelfade.setFromValue(0.0);
