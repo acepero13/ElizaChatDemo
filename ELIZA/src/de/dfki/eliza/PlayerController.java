@@ -57,6 +57,8 @@ public class PlayerController implements Initializable {
     private Button playButton;
     @FXML
     private Spinner<Integer> playerSpinner;
+    @FXML
+    private Label openedLabel;
 
     ElizaChatPlayer elizaChatPlayer;
 
@@ -96,6 +98,7 @@ public class PlayerController implements Initializable {
         playButton.setGraphic(playImageView);
 
         playButton.setOnAction((event) -> {
+            openedLabel.setVisible(false);
             if (!isPlayButtonClicked) {
                 isPlayButtonClicked = !isPlayButtonClicked;
                 imagePath = getClass().getClassLoader().getResource("stop.png").toExternalForm();
@@ -137,6 +140,7 @@ public class PlayerController implements Initializable {
         if (file != null) {
             String filename = file.getAbsolutePath();
             OpenChat();
+            handleOpenedLabel();
         }
     }
 
@@ -233,7 +237,7 @@ public class PlayerController implements Initializable {
                     });
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(spinnerCurrentValue * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -280,6 +284,18 @@ public class PlayerController implements Initializable {
         fadeTransition.setToValue(1.0);
         fadeTransition.setCycleCount(1);
         fadeTransition.setAutoReverse(false);
+    }
+    
+    private void handleOpenedLabel()
+    {
+        FadeTransition labelfade = new FadeTransition(Duration.millis(500));
+        labelfade.setNode(openedLabel);
+        labelfade.setFromValue(0.0);
+        labelfade.setToValue(1.0);
+        labelfade.setCycleCount(1);
+        labelfade.setAutoReverse(false);
+        openedLabel.setVisible(true);
+        labelfade.play();
     }
 
 }
