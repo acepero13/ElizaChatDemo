@@ -41,6 +41,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.QuadCurveTo;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -185,9 +186,11 @@ public class PlayerController implements Initializable {
                     chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
 //                    chatScrollPane.setVvalue(1.0);
                     messages = new Label(text);
+                    messages.setFont(new Font("Arial", 30));
                     messages.setWrapText(true);
                     messages.setPadding(new Insets(5, 5, 5, 5));
                     messages.setMaxWidth(800);
+                    
 
                     colIndex = colIndex % 2;
 //                    messages.setStyle("-fx-background-color: red; -fx-border-color: black;  -fx-border-radius: 10 10 10 10;\n"
@@ -201,25 +204,25 @@ public class PlayerController implements Initializable {
                     HBox box = new HBox();
 
                     if (colIndex == 0) {
-                        messages.setStyle("-fx-background-color: #DEDEDE; "
-                                + "-fx-border-color: #DEDEDE;  "
+                        messages.setStyle("-fx-background-color: #FF84CA; "
+                                + "-fx-border-color: #FF84CA;  "
                                 + "-fx-border-radius: 10 10 10 10;\n"
                                 + "-fx-background-radius: 10 10 10 10;");
                         cc.setHalignment(HPos.LEFT);
                         box.setAlignment(Pos.CENTER_LEFT);
                         GridPane.setHalignment(box, HPos.LEFT);
-                        face = createLeftFace(Color.rgb(222, 222, 222));
+                        face = createLeftFace(Color.rgb(255, 132, 202));
                         box.getChildren().addAll(face, messages);
                     } else {
-                        messages.setStyle("-fx-background-color: #9FD9FF; "
-                                + "-fx-border-color: #9FD9FF;  "
+                        messages.setStyle("-fx-background-color: #DEDEDE; "
+                                + "-fx-border-color: #DEDEDE;  "
                                 + "-fx-border-radius: 10 10 10 10;\n"
                                 + "-fx-background-radius: 10 10 10 10;");
 
                         box.setAlignment(Pos.CENTER_RIGHT);
                         GridPane.setHalignment(box, HPos.RIGHT);
                         cc.setHalignment(HPos.RIGHT);
-                        face = creatRightFace(Color.rgb(159, 217, 255));
+                        face = creatRightFace(Color.rgb(222, 222, 222));
                         box.getChildren().addAll(messages, face);
                     }
                     cc.setFillWidth(true);

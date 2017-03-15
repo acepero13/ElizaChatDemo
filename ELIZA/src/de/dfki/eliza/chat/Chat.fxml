@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="chatRoot" style="-fx-background-color: #60B8F3;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.eliza.chat.ChatController">
+<AnchorPane fx:id="chatRoot" minHeight="600.0" minWidth="800.0" style="-fx-background-color: #F75DB5;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.eliza.chat.ChatController">
    <children>
       <Separator prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
       <ScrollPane fx:id="chatScrollPane" fitToWidth="true" layoutY="42.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: black; -fx-border-width: 4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="279.0" AnchorPane.topAnchor="42.0" />

@@ -42,7 +42,7 @@ public class ChatController implements Initializable{
         chatGridPane = new GridPane();
         
         chatScrollPane.setContent(chatGridPane);
-        chatGridPane.setStyle("-fx-background-color: linear-gradient(to top, #F0F9FF, #B6DDFF);");
+        chatScrollPane.setStyle("-fx-background: #FFFFFF; -fx-border-color: #FFFFFF;");
     }
 
     public AnchorPane getChatRoot() {

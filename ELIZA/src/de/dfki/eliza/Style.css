@@ -1,9 +1,9 @@
 .button {
     -fx-background-color: 
         #000000,
-        linear-gradient(#7ebcea, #2f4b8f),
-        linear-gradient(#426ab7, #263e75),
-        linear-gradient(#395cab, #223768);
+        linear-gradient(#FF6CC0, #C90072),
+        linear-gradient(#E23C9A, #871556),
+        linear-gradient(#AE0066, #A51A69);
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 7 5 7 5;
@@ -18,7 +18,7 @@
 .button:hover{
     -fx-background-color: 
         rgba(0,0,0,0.9),
-        linear-gradient(#5a61af, #51536d);
+        linear-gradient(#F763B7, #A97693);
 
 }
 

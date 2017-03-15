@@ -40,9 +40,7 @@ public class ElizaChatPlayer extends Application {
         }
         
         String image = getClass().getClassLoader().getResource("playerBG.jpg").toExternalForm();
-        playerRoot.setStyle("-fx-background-image: url('" + image + "'); " +
-                            "-fx-background-position: center center; " +
-                            "-fx-background-repeat: stretch;");
+        playerRoot.setStyle("-fx-background-color: linear-gradient(to top, #FF6CC0, #ED008C);");
         
         PlayerController controller = loader.getController();
         controller.setPlayerApp(this);
