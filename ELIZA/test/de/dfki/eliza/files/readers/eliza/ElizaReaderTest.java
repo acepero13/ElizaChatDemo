@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.AbstractList;
 import java.util.LinkedList;
 
 import static org.junit.Assert.*;
@@ -48,7 +49,8 @@ public class ElizaReaderTest {
 
     @Test
     public void test_read_FakeLines_ParsedConversationList() {
-        FakeFileSystem fakeFS = new FakeFileSystem("/tmp/test.txt");
+        LinkedList<String> conversations = makeNamedConversation("{Name}");
+        FakeFileSystem fakeFS = makeFileSystem(conversations);
         makeReader("", fakeFS);
         reader.open();
         reader.read();
@@ -57,6 +59,43 @@ public class ElizaReaderTest {
         assertEquals(1, res);
         assertNotNull(c.getDefenseStrategy());
         assertEquals(6, c.getTotalMessages());
+    }
+
+    @Test
+    public void test_read_FakeLinesWithDictEntryAsSystemName_ParsedConversationList() {
+        LinkedList<String> conversations = makeNamedConversation("{dict-entry}");
+        FakeFileSystem fakeFS = makeFileSystem(conversations);
+        makeReader("", fakeFS);
+        reader.open();
+        reader.read();
+        int res = ((ElizaReader)reader).getTotalConversations();
+        Conversation c = ((ElizaReader) reader).conversations.getFirst();
+        assertEquals(1, res);
+        assertNotNull(c.getDefenseStrategy());
+        assertEquals(6, c.getTotalMessages());
+    }
+
+    private FakeFileSystem makeFileSystem(LinkedList<String> conversations) {
+        FakeFileSystem fakeFS = new FakeFileSystem("/tmp/test.txt");
+        InputStreamReader input = new InputStreamReader(System.in);
+        FakeBufferReader bufferedReader = new FakeBufferReader(input);
+        bufferedReader.lines = conversations;
+        fakeFS.bufferReader = bufferedReader;
+        return fakeFS;
+    }
+
+    private LinkedList<String> makeNamedConversation(String name) {
+        LinkedList<String> lines = new LinkedList<>();
+        lines.add("--------------------------");
+        lines.add("info: Sie sind nun im T-Mobile Beratungs-Chat. Ein Kundenberater wird sich in Kürze mit Ihnen verbinden und sich sofort um Ihre Fragen kümmern.");
+        lines.add("info: Schön, dass wir miteinander verbunden sind, mein Name ist " + name +". Ich beantworte Ihnen gerne Ihre Fragen zu Ihrer Webbestellung im Privatkundenbereich. ");
+        lines.add("Sie: Hallo " + name +", ich habe aktuell den Tarif {dict-entry} Max {Potentielle_ID} i ohne Bindung. ");
+        lines.add(name + ": Guten Tag werter Kunde |0|3|");
+        lines.add(name + ": Guten Tag werter Kunde |0|3|");
+        lines.add("Sie: Vielen Dank für die Infos. Und wenn ich nun");
+        lines.add("#31#1");
+        lines.add("#31#0");
+        return lines;
     }
 
     private void makeReader(String fileName, FileSystemAble fs) {
@@ -70,6 +109,8 @@ public class ElizaReaderTest {
     private class FakeFileSystem extends ElizaFileSystem {
         private boolean exists = true;
         private String fileExtension = "txt";
+        public BufferedReader bufferReader;
+
 
         public FakeFileSystem(String filename) {
             super(filename);
@@ -87,7 +128,11 @@ public class ElizaReaderTest {
 
         public BufferedReader getBufferedReader() throws FileNotFoundException{
             InputStreamReader input = new InputStreamReader(System.in);
-            return new FakeBufferReader(input);
+            if(bufferReader == null){
+                bufferReader = new FakeBufferReader(input);
+            }
+
+            return bufferReader;
         }
 
     }
@@ -98,14 +143,6 @@ public class ElizaReaderTest {
         private int counter = 0;
         public FakeBufferReader(Reader in) {
             super(in);
-            lines.add("--------------------------");
-            lines.add("info: Sie sind nun im T-Mobile Beratungs-Chat. Ein Kundenberater wird sich in Kürze mit Ihnen verbinden und sich sofort um Ihre Fragen kümmern.");
-            lines.add("info: Schön, dass wir miteinander verbunden sind, mein Name ist {Name}. Ich beantworte Ihnen gerne Ihre Fragen zu Ihrer Webbestellung im Privatkundenbereich. ");
-            lines.add("Sie: Hallo {Name}, ich habe aktuell den Tarif {dict-entry} Max {Potentielle_ID} i ohne Bindung. ");
-            lines.add("{Name}: Guten Tag werter Kunde |0|3|");
-            lines.add("{Name}: Guten Tag werter Kunde |0|3|");
-            lines.add("Sie: Vielen Dank für die Infos. Und wenn ich nun");
-            lines.add("#31#1");
 
         }
 

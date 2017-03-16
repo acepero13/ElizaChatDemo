@@ -1,11 +1,9 @@
 package de.dfki.eliza.files.parsers;
 
-import de.dfki.eliza.files.builders.ChatParser;
 import de.dfki.eliza.files.models.Info;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.parsers.dialog.Dialog;
 import de.dfki.eliza.files.parsers.dialog.DialogLine;
-import de.dfki.eliza.files.parsers.dialog.NoDialogLine;
 import de.dfki.eliza.files.parsers.dialog.NoValueLine;
 
 /**
@@ -15,8 +13,8 @@ public class InfoLineParser extends Dialog {
     @Override
     public boolean parseLine(String line) {
         valueLine = new NoValueLine();
-        dialogLine = new DialogLine(line, UserInfoLineParser.INFO_LINE);
-        return line.startsWith(UserInfoLineParser.INFO_LINE);
+        dialogLine = new DialogLine(line, Dialog.INFO_LINE);
+        return line.startsWith(Dialog.INFO_LINE);
     }
 
     @Override

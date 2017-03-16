@@ -8,6 +8,11 @@ import de.dfki.eliza.files.parsers.factories.ConversationFactory;
  * Created by alvaro on 3/14/17.
  */
 public abstract class Dialog implements ChatParser {
+    public static final String INFO_LINE = "info:";
+    public static final String USER_NAME = "Sie:";
+    public static final String VALUE_TOPIC_SEPARATOR = "|";
+    public static final int COUNT_PIPE_SEPARATOR = 3;
+
     protected DialogLineBehavior dialogLine;
     protected ValueLineBehavior valueLine;
     protected abstract boolean parseLine(String line);

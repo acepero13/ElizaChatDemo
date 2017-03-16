@@ -1,6 +1,5 @@
 package de.dfki.eliza.files.parsers;
 
-import de.dfki.eliza.files.builders.ChatParser;
 import de.dfki.eliza.files.models.Info;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.parsers.dialog.*;
@@ -12,10 +11,8 @@ import de.dfki.eliza.files.utils.NameRegexFinder;
  * Created by alvaro on 3/13/17.
  */
 public class UserInfoLineParser extends Dialog {
-    public static final String INFO_LINE = "info:";
     private NameRegexFinder regexFinder = new NameRegexFinder();
-    private String agentName;
-
+    private String agentName = "";
 
     @Override
     public boolean parseLine(String line) {
@@ -24,13 +21,13 @@ public class UserInfoLineParser extends Dialog {
         boolean hasName = regexFinder.parse(line);
         agentName = regexFinder.getName();
         return isParseable(line, hasName);
-
     }
 
     @Override
     public void postParsed() {
         Textable info = new Info(dialogLine.getText());
         conversationFactory.getConversation().addMessage(info);
+        conversationFactory.getConversation().setSystemName(agentName);
     }
 
 

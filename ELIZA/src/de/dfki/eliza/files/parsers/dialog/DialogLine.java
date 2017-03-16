@@ -1,7 +1,5 @@
 package de.dfki.eliza.files.parsers.dialog;
 
-import de.dfki.eliza.files.parsers.UserLineParser;
-
 /**
  * Created by alvaro on 3/14/17.
  */
@@ -26,7 +24,7 @@ public class DialogLine implements DialogLineBehavior{
         String trimmed = line.trim();
         text = trimmed.substring(characterName.length()).trim();
         characterName = trimmed.substring(0, characterName.length());
-        int separatorPos = text.indexOf(UserLineParser.VALUE_TOPIC_SEPARATOR);
+        int separatorPos = text.indexOf(Dialog.VALUE_TOPIC_SEPARATOR);
         if(separatorPos > 0){
             text = text.substring(0, separatorPos).trim();
         }

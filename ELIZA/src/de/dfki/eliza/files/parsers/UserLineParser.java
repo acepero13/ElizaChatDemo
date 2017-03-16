@@ -1,6 +1,5 @@
 package de.dfki.eliza.files.parsers;
 
-import de.dfki.eliza.files.builders.ChatParser;
 import de.dfki.eliza.files.models.Message;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.parsers.dialog.Dialog;
@@ -11,10 +10,6 @@ import de.dfki.eliza.files.parsers.dialog.ValueLine;
  * Created by alvaro on 3/13/17.
  */
 public class UserLineParser extends Dialog {
-
-    public static final String USER_NAME = "Sie:";
-    public static final String VALUE_TOPIC_SEPARATOR = "|";
-    public static final int COUNT_PIPE_SEPARATOR = 3;
 
 
     @Override
