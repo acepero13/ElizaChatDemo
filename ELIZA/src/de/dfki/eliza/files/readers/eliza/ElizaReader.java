@@ -42,4 +42,8 @@ public class ElizaReader extends FileReader {
     public int getTotalConversations(){
         return conversations.size();
     }
+
+    public LinkedList<Conversation> getConversations(){
+        return conversations;
+    }
 }

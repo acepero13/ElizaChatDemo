@@ -16,6 +16,7 @@ public class UserLineParser extends Dialog {
 
     @Override
     public boolean parseLine(String line) {
+        parsers.clear();
         SeparatorParser parserValueAndTopicDeprecated = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
         SeparatorParser parserValueTopicAndAssesment = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
         parsers.add(parserValueAndTopicDeprecated);

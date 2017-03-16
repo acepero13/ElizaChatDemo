@@ -33,4 +33,8 @@ public class Conversation {
     public void setSystemName(String systemName) {
         this.systemName = systemName;
     }
+
+    public LinkedList<Textable> getMessages(){
+        return messages;
+    }
 }

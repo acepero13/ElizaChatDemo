@@ -9,9 +9,18 @@ import de.dfki.eliza.chat.ChatController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import de.dfki.eliza.files.filestystem.FileSystemAble;
+import de.dfki.eliza.files.filestystem.eliza.ElizaFileSystem;
+import de.dfki.eliza.files.models.Conversation;
+import de.dfki.eliza.files.models.Message;
+import de.dfki.eliza.files.models.Textable;
+import de.dfki.eliza.files.readers.eliza.ElizaReader;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
@@ -90,6 +99,7 @@ public class PlayerController implements Initializable {
     private FadeTransition fadeMessage = new FadeTransition(Duration.millis(500));
     private FadeTransition fadePath = new FadeTransition(Duration.millis(500));
     ParallelTransition pt = new ParallelTransition();
+    private ElizaReader elizaReader;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -146,7 +156,18 @@ public class PlayerController implements Initializable {
             String filename = file.getAbsolutePath();
             OpenChat();
             handleOpenedLabel();
+            loadFile(filename);
         }
+    }
+
+    private void loadFile(String filename) {
+        FileSystemAble fileSystem = new ElizaFileSystem(filename);
+        elizaReader = new ElizaReader( filename,fileSystem);
+        elizaReader.open();
+        elizaReader.read();
+        int a = 0;
+        /*conversations = reader.getConversations();
+        addFirstConversationIntoChatFrame(conversations);*/
     }
 
     public int getSpinnerCurrentValue() {
@@ -176,10 +197,21 @@ public class PlayerController implements Initializable {
     }
 
     private void handleChatMessages() {
+        LinkedList<Conversation> conversations = elizaReader.getConversations();
+        Iterator<Conversation> conversationIterator = conversations.iterator();
+        Conversation conversation = conversationIterator.next();
+        Iterator<Textable> messageIterator = null;
+        if(conversation !=null && conversation.getTotalMessages() > 0){
+            messageIterator = conversation.getMessages().iterator();
+        }
+
+        Iterator<Textable> finalMessageIterator = messageIterator;
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                Iterator<Textable> messagesIt = finalMessageIterator;
                 while (isPlayButtonClicked) {
+
                     Path face;
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
@@ -252,7 +284,14 @@ public class PlayerController implements Initializable {
                     }
                     rowIndex++;
                     colIndex++;
-                    text += "Beka ";
+                    if(messagesIt != null){
+                        Textable m =  messagesIt.next();
+                        text = m.getText();
+                        if(conversationIterator.hasNext() && !messagesIt.hasNext()){
+                            messagesIt = conversationIterator.next().getMessages().iterator();
+                        }
+                    }
+
                 }
 
             }
