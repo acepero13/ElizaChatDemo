@@ -39,8 +39,18 @@ public class UserLineParserTest {
         parser.parse("Sie: " + expected + " |3|2|");
         String text = parser.getText();
         assertEquals(expected, text);
+        int res = parser.getIntAt(0);
+        assertEquals(res, 3);
+    }
 
-
+    @Test
+    public void test_parse_UserLineWithTopicAndValueAndAssesment_TopicValueAndAssesMent() {
+        makeParser();
+        String expected = "Hallo {Name}, ich habe aktuell den Tarif";
+        parser.parse("Sie: " + expected + " |3|2|4|");
+        String text = parser.getText();
+        int res = parser.getIntAt(0);
+        assertEquals(res, 3);
     }
 
 

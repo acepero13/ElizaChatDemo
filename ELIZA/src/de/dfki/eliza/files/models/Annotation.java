@@ -3,9 +3,11 @@ package de.dfki.eliza.files.models;
 /**
  * Created by alvaro on 3/13/17.
  */
-public class DefenseStrategy {
-    private int value;
-    private boolean isPinned;
+public class Annotation {
+    private int value = -1;
+    private boolean isPinned = false;
+    private int assesment = -1;
+
 
     public int getValue() {
         return value;
@@ -25,5 +27,13 @@ public class DefenseStrategy {
 
     public void unsetPinned() {
         isPinned = false;
+    }
+
+    public int getAssesment() {
+        return assesment;
+    }
+
+    public void setAssesment(int assesment) {
+        this.assesment = assesment;
     }
 }

@@ -7,7 +7,7 @@ import java.util.LinkedList;
  */
 public class Conversation {
     private LinkedList<Textable> messages = new LinkedList<>();
-    private DefenseStrategy defenseStrategy;
+    private Annotation annotation;
     private String systemName  = "{Name}";
     public void addMessage(Textable m){
         messages.add(m);
@@ -18,12 +18,12 @@ public class Conversation {
     }
 
 
-    public DefenseStrategy getDefenseStrategy() {
-        return defenseStrategy;
+    public Annotation getAnnotation() {
+        return annotation;
     }
 
-    public void setDefenseStrategy(DefenseStrategy defenseStrategy) {
-        this.defenseStrategy = defenseStrategy;
+    public void setAnnotation(Annotation annotation) {
+        this.annotation = annotation;
     }
 
     public String getSystemName() {

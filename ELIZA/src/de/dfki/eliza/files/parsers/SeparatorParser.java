@@ -18,12 +18,13 @@ public class SeparatorParser {
         this.appearances = appearances;
     }
 
-    public void parse() {
+    public boolean parse() {
 
         if (countMatches(text, separator) == appearances) {
             addValues();
+            return true;
         }
-
+        return false;
     }
 
     private void addValues() {

@@ -8,10 +8,17 @@ import java.util.LinkedList;
  * Created by alvaro on 3/14/17.
  */
 public class ValueLine implements ValueLineBehavior {
-    private final SeparatorParser parser;
+    private  SeparatorParser parser;
     LinkedList<String> values = new LinkedList<>();
+    LinkedList<SeparatorParser> parsers = new LinkedList<>();
     public ValueLine(SeparatorParser parser){
         this.parser = parser;
+        parsers.add(parser);
+    }
+
+    public ValueLine(LinkedList<SeparatorParser> parsers) {
+        parser = parsers.getFirst();
+        this.parsers = parsers;
     }
 
     @Override
@@ -26,10 +33,21 @@ public class ValueLine implements ValueLineBehavior {
 
     @Override
     public void parseText() {
-        parser.parse();
+        int i = 0;
+        boolean found = false;
+        while (i < parsers.size() && !found){
+            SeparatorParser p = parsers.get(i);
+            found = isParsed(p);
+            i++;
+            parser = p;
+        }
 
     }
 
+    private boolean isParsed(SeparatorParser p) {
+        boolean parsed =  p.parse();
+        return parsed;
+    }
 
 
 }

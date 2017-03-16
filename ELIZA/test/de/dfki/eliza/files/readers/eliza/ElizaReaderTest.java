@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.AbstractList;
 import java.util.LinkedList;
 
 import static org.junit.Assert.*;
@@ -57,7 +56,7 @@ public class ElizaReaderTest {
         int res = ((ElizaReader)reader).getTotalConversations();
         Conversation c = ((ElizaReader) reader).conversations.getFirst();
         assertEquals(1, res);
-        assertNotNull(c.getDefenseStrategy());
+        assertNotNull(c.getAnnotation());
         assertEquals(6, c.getTotalMessages());
     }
 
@@ -71,7 +70,7 @@ public class ElizaReaderTest {
         int res = ((ElizaReader)reader).getTotalConversations();
         Conversation c = ((ElizaReader) reader).conversations.getFirst();
         assertEquals(1, res);
-        assertNotNull(c.getDefenseStrategy());
+        assertNotNull(c.getAnnotation());
         assertEquals(6, c.getTotalMessages());
     }
 

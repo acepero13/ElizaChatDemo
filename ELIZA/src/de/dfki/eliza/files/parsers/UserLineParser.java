@@ -6,16 +6,21 @@ import de.dfki.eliza.files.parsers.dialog.Dialog;
 import de.dfki.eliza.files.parsers.dialog.DialogLine;
 import de.dfki.eliza.files.parsers.dialog.ValueLine;
 
+import java.util.LinkedList;
+
 /**
  * Created by alvaro on 3/13/17.
  */
 public class UserLineParser extends Dialog {
-
+    private LinkedList<SeparatorParser> parsers = new LinkedList<>();
 
     @Override
     public boolean parseLine(String line) {
-        SeparatorParser parser = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
-        valueLine = new ValueLine(parser);
+        SeparatorParser parserValueAndTopicDeprecated = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
+        SeparatorParser parserValueTopicAndAssesment = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
+        parsers.add(parserValueAndTopicDeprecated);
+        parsers.add(parserValueTopicAndAssesment);
+        valueLine = new ValueLine(parsers);
         dialogLine = new DialogLine(line, USER_NAME);
         return line.startsWith(USER_NAME);
     }

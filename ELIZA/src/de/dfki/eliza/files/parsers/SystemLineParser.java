@@ -1,6 +1,5 @@
 package de.dfki.eliza.files.parsers;
 
-import de.dfki.eliza.files.builders.ChatParser;
 import de.dfki.eliza.files.models.Message;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.parsers.dialog.Dialog;
@@ -17,7 +16,7 @@ public class SystemLineParser extends Dialog {
     @Override
     public boolean parseLine(String line) {
         SystemName = ConversationFactory.getInstance().getConversation().getSystemName();
-        SeparatorParser parser = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
+        SeparatorParser parser = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
         valueLine = new ValueLine(parser);
         dialogLine = new DialogLine(line, SystemName);
         return line.startsWith(SystemName);

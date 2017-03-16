@@ -1,7 +1,7 @@
 package de.dfki.eliza.files.parsers;
 
 import de.dfki.eliza.files.builders.ChatParser;
-import de.dfki.eliza.files.models.DefenseStrategy;
+import de.dfki.eliza.files.models.Annotation;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * Created by alvaro on 3/13/17.
  */
-public class DefenseStrategyParserTest {
+public class AnnotationParserTest {
     private  ChatParser parser;
 
 
@@ -31,9 +31,9 @@ public class DefenseStrategyParserTest {
     public void test_parse_DefenseLineValueAndNotPinned_DefenseStrategyObject() {
         makeParser();
         parser.parse("#31#1");
-        DefenseStrategy defenseStrategy = ((DefenseStrategyParser)parser).getDefenseStrategy();
-        assertEquals(31, defenseStrategy.getValue());
-        assertEquals(true, defenseStrategy.isPinned());
+        Annotation annotation = ((DefenseStrategyParser)parser).getAnnotation();
+        assertEquals(31, annotation.getValue());
+        assertEquals(true, annotation.isPinned());
     }
 
     private void makeParser() {
