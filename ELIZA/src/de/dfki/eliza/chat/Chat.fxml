@@ -10,8 +10,8 @@
 
 <AnchorPane fx:id="chatRoot" minHeight="600.0" minWidth="800.0" style="-fx-background-color: #E50077;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.dfki.eliza.chat.ChatController">
    <children>
-      <ScrollPane fx:id="chatScrollPane" fitToWidth="true" layoutY="42.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: black; -fx-border-width: 4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="279.0" AnchorPane.topAnchor="42.0" />
-      <AnchorPane layoutX="690.0" layoutY="42.0" prefHeight="558.0" prefWidth="265.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
+      <ScrollPane fx:id="chatScrollPane" fitToWidth="true" layoutY="24.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-border-color: black; -fx-border-width: 4;" AnchorPane.bottomAnchor="18.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="279.0" AnchorPane.topAnchor="24.0" />
+      <AnchorPane layoutX="535.0" layoutY="24.0" prefHeight="558.0" prefWidth="265.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="18.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
          <children>
             <VBox alignment="CENTER" layoutX="33.0" layoutY="148.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="148.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="148.0">
                <children>
