@@ -80,6 +80,7 @@ public class PlayerController implements Initializable {
     String imagePath;
     Image image;
     ImageView playImageView;
+    
 
     private Stage chatStage;
     private AnchorPane chatRoot;
