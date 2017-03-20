@@ -5,6 +5,7 @@
  */
 package de.dfki.eliza;
 
+import de.dfki.connection.Sender;
 import de.dfki.eliza.chat.ChatController;
 import java.io.File;
 import java.io.IOException;
@@ -91,6 +92,8 @@ public class PlayerController implements Initializable {
     private GridPane chatGridPane;
     Label messages;
     File file;
+    
+    Sender messageSender;
 
     //****************TEST***************//
     String text = "Beka";
@@ -105,7 +108,7 @@ public class PlayerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        messageSender = new Sender();
         imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
         image = new Image(imagePath);
         playImageView = new ImageView(image);
@@ -288,6 +291,7 @@ public class PlayerController implements Initializable {
                     if(messagesIt != null){
                         Textable m =  messagesIt.next();
                         text = m.getText();
+                        messageSender.send(text);
                         if(conversationIterator.hasNext() && !messagesIt.hasNext()){
                             messagesIt = conversationIterator.next().getMessages().iterator();
                         }
