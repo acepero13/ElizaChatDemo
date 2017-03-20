@@ -27,7 +27,7 @@ public class ChatController implements Initializable{
     @FXML
     private ScrollPane chatScrollPane;
     @FXML
-    private ImageView emotionImageView;
+    private ImageView emoImageView;
     
     private GridPane chatGridPane;
     
@@ -54,7 +54,7 @@ public class ChatController implements Initializable{
     }
 
     public ImageView getEmotionImageView() {
-        return emotionImageView;
+        return emoImageView;
     }
 
     public GridPane getChatGridPane() {

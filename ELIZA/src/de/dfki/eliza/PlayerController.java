@@ -79,6 +79,7 @@ public class PlayerController implements Initializable {
 
     String imagePath;
     Image image;
+    Image emoImage;
     ImageView playImageView;
     
 
@@ -217,7 +218,6 @@ public class PlayerController implements Initializable {
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
                     chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
-//                    chatScrollPane.setVvalue(1.0);
                     messages = new Label(text);
                     messages.setFont(new Font("Arial", 30));
                     messages.setWrapText(true);
@@ -226,9 +226,6 @@ public class PlayerController implements Initializable {
                     
 
                     colIndex = colIndex % 2;
-//                    messages.setStyle("-fx-background-color: red; -fx-border-color: black;  -fx-border-radius: 10 10 10 10;\n"
-//                            + "-fx-background-radius: 10 10 10 10;");
-
                     ColumnConstraints cc = new ColumnConstraints();
 
                     chatGridPane.getColumnConstraints().clear();
@@ -237,26 +234,29 @@ public class PlayerController implements Initializable {
                     HBox box = new HBox();
 
                     if (colIndex == 0) {
-                        messages.setStyle("-fx-background-color: #FF84CA; "
-                                + "-fx-border-color: #FF84CA;  "
-                                + "-fx-border-radius: 10 10 10 10;\n"
-                                + "-fx-background-radius: 10 10 10 10;");
+                        createSystemMessageStyle(messages);
                         cc.setHalignment(HPos.LEFT);
                         box.setAlignment(Pos.CENTER_LEFT);
                         GridPane.setHalignment(box, HPos.LEFT);
                         face = createLeftFace(Color.rgb(255, 132, 202));
                         box.getChildren().addAll(face, messages);
+                        
+                        String emoImagePath = getClass().getClassLoader().getResource("smile.png").toExternalForm();
+                        emoImage = new Image(emoImagePath);
+                        ImageView emoImageView = chatController.getEmotionImageView();
+                        emoImageView.setImage(emoImage);
                     } else {
-                        messages.setStyle("-fx-background-color: #DEDEDE; "
-                                + "-fx-border-color: #DEDEDE;  "
-                                + "-fx-border-radius: 10 10 10 10;\n"
-                                + "-fx-background-radius: 10 10 10 10;");
+                        createUserMessageStyle(messages);
 
                         box.setAlignment(Pos.CENTER_RIGHT);
                         GridPane.setHalignment(box, HPos.RIGHT);
                         cc.setHalignment(HPos.RIGHT);
                         face = creatRightFace(Color.rgb(222, 222, 222));
                         box.getChildren().addAll(messages, face);
+                        String emoImagePath = getClass().getClassLoader().getResource("sad.png").toExternalForm();
+                        emoImage = new Image(emoImagePath);
+                        ImageView emoImageView = chatController.getEmotionImageView();
+                        emoImageView.setImage(emoImage);
                     }
                     cc.setFillWidth(true);
                     cc.setHgrow(Priority.ALWAYS);
@@ -344,6 +344,22 @@ public class PlayerController implements Initializable {
         labelfade.setAutoReverse(false);
         openedLabel.setVisible(true);
         labelfade.play();
+    }
+    
+    private void createSystemMessageStyle(Label message)
+    {
+        message.setStyle("-fx-background-color: #FF84CA; "
+                                + "-fx-border-color: #FF84CA;  "
+                                + "-fx-border-radius: 10 10 10 10;\n"
+                                + "-fx-background-radius: 10 10 10 10;");
+    }
+    
+    private void createUserMessageStyle(Label message)
+    {
+        message.setStyle("-fx-background-color: #DEDEDE; "
+                                + "-fx-border-color: #DEDEDE;  "
+                                + "-fx-border-radius: 10 10 10 10;\n"
+                                + "-fx-background-radius: 10 10 10 10;");
     }
 
 }
