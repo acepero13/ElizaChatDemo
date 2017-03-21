@@ -5,4 +5,5 @@ package de.dfki.eliza.files.models;
  */
 public interface Textable {
     String getText();
+    void isUser(boolean b);
 }

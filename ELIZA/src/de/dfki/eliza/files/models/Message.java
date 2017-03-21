@@ -7,6 +7,7 @@ public class Message implements Textable{
     private String text;
     private int value;
     private int topic;
+    private boolean isUserMessage = false;
 
     public Message(String text, int value, int topic){
         this.text = text;
@@ -39,4 +40,14 @@ public class Message implements Textable{
     public void setTopic(int topic) {
         this.topic = topic;
     }
+
+    @Override
+    public void isUser(boolean b) {
+        this.isUserMessage = b;
+    }
+
+    public boolean isIsUserMessage() {
+        return isUserMessage;
+    }
+    
 }

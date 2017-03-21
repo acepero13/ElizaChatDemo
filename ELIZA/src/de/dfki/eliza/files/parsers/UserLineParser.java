@@ -28,6 +28,7 @@ public class UserLineParser extends Dialog {
 
     public void postParsed(){
         Textable m = new Message(dialogLine.getText(), valueLine.getIntAt(0), valueLine.getIntAt(1));
+        m.isUser(true);
         conversationFactory.getConversation().addMessage(m);
     }
 

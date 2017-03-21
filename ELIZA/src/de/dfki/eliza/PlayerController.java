@@ -82,7 +82,6 @@ public class PlayerController implements Initializable {
     Image image;
     Image emoImage;
     ImageView playImageView;
-    
 
     private Stage chatStage;
     private AnchorPane chatRoot;
@@ -92,7 +91,7 @@ public class PlayerController implements Initializable {
     private GridPane chatGridPane;
     Label messages;
     File file;
-    
+
     Sender messageSender;
 
     //****************TEST***************//
@@ -167,7 +166,7 @@ public class PlayerController implements Initializable {
 
     private void loadFile(String filename) {
         FileSystemAble fileSystem = new ElizaFileSystem(filename);
-        elizaReader = new ElizaReader( filename,fileSystem);
+        elizaReader = new ElizaReader(filename, fileSystem);
         elizaReader.open();
         elizaReader.read();
         int a = 0;
@@ -200,13 +199,14 @@ public class PlayerController implements Initializable {
         chatStage.setX(600);
         chatStage.show();
     }
+    private boolean isUser = false;
 
     private void handleChatMessages() {
         LinkedList<Conversation> conversations = elizaReader.getConversations();
         Iterator<Conversation> conversationIterator = conversations.iterator();
         Conversation conversation = conversationIterator.next();
         Iterator<Textable> messageIterator = null;
-        if(conversation !=null && conversation.getTotalMessages() > 0){
+        if (conversation != null && conversation.getTotalMessages() > 0) {
             messageIterator = conversation.getMessages().iterator();
         }
 
@@ -221,82 +221,95 @@ public class PlayerController implements Initializable {
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
                     chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
-                    messages = new Label(text);
-                    messages.setFont(new Font("Arial", 30));
-                    messages.setWrapText(true);
-                    messages.setPadding(new Insets(5, 5, 5, 5));
-                    messages.setMaxWidth(800);
-                    
 
-                    colIndex = colIndex % 2;
-                    ColumnConstraints cc = new ColumnConstraints();
-
-                    chatGridPane.getColumnConstraints().clear();
-                    chatGridPane.getColumnConstraints().add(cc);
-
-                    HBox box = new HBox();
-
-                    if (colIndex == 0) {
-                        createSystemMessageStyle(messages);
-                        cc.setHalignment(HPos.LEFT);
-                        box.setAlignment(Pos.CENTER_LEFT);
-                        GridPane.setHalignment(box, HPos.LEFT);
-                        face = createLeftFace(Color.rgb(255, 132, 202));
-                        box.getChildren().addAll(face, messages);
-                        
-                        String emoImagePath = getClass().getClassLoader().getResource("smile.png").toExternalForm();
-                        emoImage = new Image(emoImagePath);
-                        ImageView emoImageView = chatController.getEmotionImageView();
-                        emoImageView.setImage(emoImage);
-                    } else {
-                        createUserMessageStyle(messages);
-
-                        box.setAlignment(Pos.CENTER_RIGHT);
-                        GridPane.setHalignment(box, HPos.RIGHT);
-                        cc.setHalignment(HPos.RIGHT);
-                        face = creatRightFace(Color.rgb(222, 222, 222));
-                        box.getChildren().addAll(messages, face);
-                        String emoImagePath = getClass().getClassLoader().getResource("sad.png").toExternalForm();
-                        emoImage = new Image(emoImagePath);
-                        ImageView emoImageView = chatController.getEmotionImageView();
-                        emoImageView.setImage(emoImage);
+                    if (messagesIt != null) {
+                        Textable m = messagesIt.next();
+                        text = m.getText();
+                        try {
+                            isUser = ((Message) m).isIsUserMessage();
+                        } catch (ClassCastException ex) {
+                            text = "";
+                        }
+                        messageSender.send(text);
+                        if (conversationIterator.hasNext() && !messagesIt.hasNext()) {
+                            messagesIt = conversationIterator.next().getMessages().iterator();
+                        }
                     }
-                    cc.setFillWidth(true);
-                    cc.setHgrow(Priority.ALWAYS);
 
-                    messages.setVisible(false);
-                    face.setVisible(false);
+                    if (!text.equalsIgnoreCase("")) {
+                        messages = new Label(text);
+                        messages.setFont(new Font("Arial", 30));
+                        messages.setWrapText(true);
+                        messages.setPadding(new Insets(5, 5, 5, 5));
+                        messages.setMaxWidth(800);
+                        messages.setVisible(false);
 
-                    createFadeEffect(fadeMessage, messages);
-                    createFadeEffect(fadePath, face);
+                        ColumnConstraints cc = new ColumnConstraints();
+                        cc.setFillWidth(true);
+                        cc.setHgrow(Priority.ALWAYS);
+                        chatGridPane.getColumnConstraints().clear();
+                        chatGridPane.getColumnConstraints().add(cc);
+                        chatGridPane.setVgap(10);
 
-                    pt.getChildren().clear();
-                    pt.getChildren().addAll(fadeMessage, fadePath);
+                        HBox box = new HBox();
 
-                    Platform.runLater(()
-                            -> {
-                        chatGridPane.add(box, colIndex, rowIndex);
-                        messages.setVisible(true);
-                        face.setVisible(true);
-                        pt.play();
-                    });
+                        if (!isUser) {
+                            createSystemMessageStyle(messages);
+                            cc.setHalignment(HPos.LEFT);
+                            box.setAlignment(Pos.CENTER_LEFT);
+                            GridPane.setHalignment(box, HPos.LEFT);
+                            face = createLeftFace(Color.rgb(255, 132, 202));
+                            face.setVisible(false);
+                            box.getChildren().addAll(face, messages);
+                            createFadeEffect(fadeMessage, messages);
+                            createFadeEffect(fadePath, face);
+                            pt.getChildren().clear();
+                            pt.getChildren().addAll(fadeMessage, fadePath);
+                            Platform.runLater(()
+                                    -> {
+                                chatGridPane.add(box, 0, rowIndex);
+                                messages.setVisible(true);
+                                face.setVisible(true);
+                                pt.play();
+                            });
+                            rowIndex++;
+                            String emoImagePath = getClass().getClassLoader().getResource("smile.png").toExternalForm();
+                            emoImage = new Image(emoImagePath);
+                            ImageView emoImageView = chatController.getEmotionImageView();
+                            emoImageView.setImage(emoImage);
+                        } else {
+                            createUserMessageStyle(messages);
+
+                            box.setAlignment(Pos.CENTER_RIGHT);
+                            GridPane.setHalignment(box, HPos.RIGHT);
+                            cc.setHalignment(HPos.RIGHT);
+                            face = creatRightFace(Color.rgb(222, 222, 222));
+                            face.setVisible(false);
+                            box.getChildren().addAll(messages, face);
+                            createFadeEffect(fadeMessage, messages);
+                            createFadeEffect(fadePath, face);
+                            pt.getChildren().clear();
+                            pt.getChildren().addAll(fadeMessage, fadePath);
+                            Platform.runLater(()
+                                    -> {
+                                chatGridPane.add(box, colIndex, rowIndex);
+                                messages.setVisible(true);
+                                face.setVisible(true);
+                                pt.play();
+                            });
+                            rowIndex++;
+                            String emoImagePath = getClass().getClassLoader().getResource("sad.png").toExternalForm();
+                            emoImage = new Image(emoImagePath);
+                            ImageView emoImageView = chatController.getEmotionImageView();
+                            emoImageView.setImage(emoImage);
+                        }
+                    }
 
                     try {
                         Thread.sleep(spinnerCurrentValue * 1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    rowIndex++;
-                    colIndex++;
-                    if(messagesIt != null){
-                        Textable m =  messagesIt.next();
-                        text = m.getText();
-                        messageSender.send(text);
-                        if(conversationIterator.hasNext() && !messagesIt.hasNext()){
-                            messagesIt = conversationIterator.next().getMessages().iterator();
-                        }
-                    }
-
                 }
 
             }
@@ -349,21 +362,19 @@ public class PlayerController implements Initializable {
         openedLabel.setVisible(true);
         labelfade.play();
     }
-    
-    private void createSystemMessageStyle(Label message)
-    {
+
+    private void createSystemMessageStyle(Label message) {
         message.setStyle("-fx-background-color: #FF84CA; "
-                                + "-fx-border-color: #FF84CA;  "
-                                + "-fx-border-radius: 10 10 10 10;\n"
-                                + "-fx-background-radius: 10 10 10 10;");
+                + "-fx-border-color: #FF84CA;  "
+                + "-fx-border-radius: 10 10 10 10;\n"
+                + "-fx-background-radius: 10 10 10 10;");
     }
-    
-    private void createUserMessageStyle(Label message)
-    {
+
+    private void createUserMessageStyle(Label message) {
         message.setStyle("-fx-background-color: #DEDEDE; "
-                                + "-fx-border-color: #DEDEDE;  "
-                                + "-fx-border-radius: 10 10 10 10;\n"
-                                + "-fx-background-radius: 10 10 10 10;");
+                + "-fx-border-color: #DEDEDE;  "
+                + "-fx-border-radius: 10 10 10 10;\n"
+                + "-fx-background-radius: 10 10 10 10;");
     }
 
 }

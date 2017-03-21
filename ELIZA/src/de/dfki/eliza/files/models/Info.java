@@ -12,4 +12,9 @@ public class Info implements Textable {
     public String getText() {
         return text;
     }
+
+    @Override
+    public void isUser(boolean b) {
+        
+    }
 }
