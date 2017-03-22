@@ -15,7 +15,7 @@ public class DefenseStrategyParser extends Dialog {
 
     @Override
     public boolean parseLine(String line) {
-        SeparatorParser parser = new SeparatorParser(DEFENSE_SEPARATOR, line, POSSIBLE_VALUES);
+        IntSeparatorParser parser = new IntSeparatorParser(DEFENSE_SEPARATOR, line, POSSIBLE_VALUES);
         valueLine =  new ValueLine(parser);
         dialogLine = new NoDialogLine();
         return line.startsWith(DEFENSE_SEPARATOR);

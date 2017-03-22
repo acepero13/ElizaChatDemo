@@ -16,7 +16,7 @@ public class SystemLineParser extends Dialog {
     @Override
     public boolean parseLine(String line) {
         SystemName = ConversationFactory.getInstance().getConversation().getSystemName();
-        SeparatorParser parser = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
+        IntSeparatorParser parser = new IntSeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
         valueLine = new ValueLine(parser);
         dialogLine = new DialogLine(line, SystemName);
         return line.startsWith(SystemName);

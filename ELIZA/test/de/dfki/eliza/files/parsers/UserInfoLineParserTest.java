@@ -66,7 +66,17 @@ public class UserInfoLineParserTest {
     @Test
     public void test_parse_GoodTextLine_OnlyText() {
         makeParser();
-        String expected = "Schön, dass wir miteinander verbunden sind, mein name ist {Name}. Ich beantworte Ihnen gerne Ihre";
+        String expected = "Schön, dass wir miteinander verbunden sind, mein Name ist {Name}. Ich beantworte Ihnen gerne Ihre";
+        String line = "info: " + expected;
+        parser.parse(line);
+        String res = parser.getText();
+        assertEquals(expected, res);
+    }
+
+    @Test
+    public void test_parse_GoodTextLineWithNameWithoutBracketsAndWithEndingPoint_OnlyText() {
+        makeParser();
+        String expected = "Hallo, guten tag, mein Name ist Mandy. es ist ein Vergnügen, Sie kennen zu lernen";
         String line = "info: " + expected;
         parser.parse(line);
         String res = parser.getText();

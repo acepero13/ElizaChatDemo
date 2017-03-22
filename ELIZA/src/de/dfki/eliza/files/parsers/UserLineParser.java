@@ -12,18 +12,22 @@ import java.util.LinkedList;
  * Created by alvaro on 3/13/17.
  */
 public class UserLineParser extends Dialog {
-    private LinkedList<SeparatorParser> parsers = new LinkedList<>();
+    private LinkedList<IntSeparatorParser> parsers = new LinkedList<>();
 
     @Override
     public boolean parseLine(String line) {
-        parsers.clear();
-        SeparatorParser parserValueAndTopicDeprecated = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
-        SeparatorParser parserValueTopicAndAssesment = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
-        parsers.add(parserValueAndTopicDeprecated);
-        parsers.add(parserValueTopicAndAssesment);
+        initParsers(line);
         valueLine = new ValueLine(parsers);
         dialogLine = new DialogLine(line, USER_NAME);
         return line.startsWith(USER_NAME);
+    }
+
+    private void initParsers(String line) {
+        parsers.clear();
+        IntSeparatorParser parserValueAndTopicDeprecated = new IntSeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
+        IntSeparatorParser parserValueTopicAndAssesment = new IntSeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR);
+        parsers.add(parserValueAndTopicDeprecated);
+        parsers.add(parserValueTopicAndAssesment);
     }
 
     public void postParsed(){

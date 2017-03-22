@@ -10,9 +10,9 @@ import de.dfki.eliza.files.parsers.factories.ConversationFactory;
 public abstract class Dialog implements ChatParser {
     public static final String INFO_LINE = "info:";
     public static final String USER_NAME = "Sie:";
-    public static final String VALUE_TOPIC_SEPARATOR = "|";
-    public static final int COUNT_PIPE_SEPARATOR_DEPRECATED = 3;
-    public static final int COUNT_PIPE_SEPARATOR = 4;
+    public static final String VALUE_TOPIC_SEPARATOR = "\\|";
+    public static final int COUNT_PIPE_SEPARATOR_DEPRECATED = 2;
+    public static final int COUNT_PIPE_SEPARATOR = 3;
 
     protected DialogLineBehavior dialogLine;
     protected ValueLineBehavior valueLine;
