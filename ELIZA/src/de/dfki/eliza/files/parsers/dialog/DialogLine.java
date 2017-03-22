@@ -8,9 +8,9 @@ import de.dfki.eliza.files.parsers.TextValueSeparator;
 public class DialogLine implements DialogLineBehavior{
 
     private final String line;
+    private final TextValueSeparator textValueSeparator;
     private  String characterName;
     private String text;
-    private final TextValueSeparator textValueSeparator;
     public DialogLine(String line, String characterName){
         this.line = line;
         this.characterName = characterName;
@@ -29,6 +29,13 @@ public class DialogLine implements DialogLineBehavior{
         separateCharacterName(trimmed);
         textValueSeparator.parseLine(text);
         text = textValueSeparator.getText().trim();
+        removeDialogDots();
+    }
+
+    void removeDialogDots() {
+        if(text.startsWith(":")){
+            text = text.substring(1).trim();
+        }
     }
 
     private void separateCharacterName(String trimmed) {
