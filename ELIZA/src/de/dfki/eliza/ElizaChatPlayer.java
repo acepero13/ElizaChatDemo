@@ -50,6 +50,11 @@ public class ElizaChatPlayer extends Application {
         primaryStage.setResizable(false);
         primaryStage.setX(0);
         primaryStage.show();
+        
+        primaryStage.setOnCloseRequest((event) -> {
+            System.exit(0);
+        });
+        
     }
 
     public Stage getPrimaryStage() {
