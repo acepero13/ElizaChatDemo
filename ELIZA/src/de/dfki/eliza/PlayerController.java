@@ -60,7 +60,8 @@ import javafx.util.Duration;
  *
  * @author EmpaT
  */
-public class PlayerController implements Initializable {
+public class PlayerController implements Initializable
+{
 
     @FXML
     private Button openFileButton;
@@ -71,17 +72,18 @@ public class PlayerController implements Initializable {
     @FXML
     private Label openedLabel;
 
-    ElizaChatPlayer elizaChatPlayer;
+    private ElizaChatPlayer elizaChatPlayer;
+    private ElizaReader elizaReader;
 
     private final int spinnerInitalValue = 1;
     private int spinnerCurrentValue = spinnerInitalValue;
 
     private boolean isPlayButtonClicked = false;
 
-    String imagePath;
-    Image image;
-    Image emoImage;
-    ImageView playImageView;
+    private String imagePath;
+    private Image image;
+    private Image emoImage;
+    private ImageView playImageView;
 
     private Stage chatStage;
     private AnchorPane chatRoot;
@@ -93,48 +95,34 @@ public class PlayerController implements Initializable {
     File file;
 
     Sender messageSender;
-
-    //****************TEST***************//
-    String text = "Beka";
+    String text = "";
     int rowIndex = 0;
-    int colIndex = 2;
-    //****************TESTEND***************//
 
     private FadeTransition fadeMessage = new FadeTransition(Duration.millis(500));
     private FadeTransition fadePath = new FadeTransition(Duration.millis(500));
     ParallelTransition pt = new ParallelTransition();
-    private ElizaReader elizaReader;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources)
+    {
         messageSender = new Sender();
         imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
         image = new Image(imagePath);
         playImageView = new ImageView(image);
         playButton.setGraphic(playImageView);
 
-        playButton.setOnAction((event) -> {
+        playButton.setOnAction((event) ->
+        {
             openedLabel.setVisible(false);
-            if (file != null) {
-                if (!isPlayButtonClicked) {
-                    isPlayButtonClicked = !isPlayButtonClicked;
-                    imagePath = getClass().getClassLoader().getResource("stop.png").toExternalForm();
-
-                } else {
-                    isPlayButtonClicked = !isPlayButtonClicked;
-                    imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
-                }
-
-                image = new Image(imagePath);
-                playImageView = new ImageView(image);
-                playButton.setGraphic(playImageView);
-
-                handleChatMessages();
+            if (file != null)
+            {
+                handlePlayButton();
             }
 
         });
 
-        openFileButton.setOnAction((event) -> {
+        openFileButton.setOnAction((event) ->
+        {
             handleOpen();
         });
 
@@ -142,12 +130,34 @@ public class PlayerController implements Initializable {
                 = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, spinnerInitalValue);
         playerSpinner.setValueFactory(valueFactory);
 
-        playerSpinner.setOnMouseClicked((event) -> {
+        playerSpinner.setOnMouseClicked((event) ->
+        {
             spinnerCurrentValue = playerSpinner.getValue();
         });
     }
 
-    private void handleOpen() {
+    private void handlePlayButton()
+    {
+        if (!isPlayButtonClicked)
+        {
+            isPlayButtonClicked = !isPlayButtonClicked;
+            imagePath = getClass().getClassLoader().getResource("stop.png").toExternalForm();
+        }
+        else
+        {
+            isPlayButtonClicked = !isPlayButtonClicked;
+            imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
+        }
+
+        image = new Image(imagePath);
+        playImageView = new ImageView(image);
+        playButton.setGraphic(playImageView);
+
+        handleChatMessages();
+    }
+
+    private void handleOpen()
+    {
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
@@ -156,7 +166,8 @@ public class PlayerController implements Initializable {
 
         // Show open file dialog
         file = fileChooser.showOpenDialog(elizaChatPlayer.getPrimaryStage());
-        if (file != null) {
+        if (file != null)
+        {
             String filename = file.getAbsolutePath();
             OpenChat();
             handleOpenedLabel();
@@ -164,32 +175,36 @@ public class PlayerController implements Initializable {
         }
     }
 
-    private void loadFile(String filename) {
+    private void loadFile(String filename)
+    {
         FileSystemAble fileSystem = new ElizaFileSystem(filename);
         elizaReader = new ElizaReader(filename, fileSystem);
         elizaReader.open();
         elizaReader.read();
-        int a = 0;
-        /*conversations = reader.getConversations();
-        addFirstConversationIntoChatFrame(conversations);*/
     }
 
-    public int getSpinnerCurrentValue() {
+    public int getSpinnerCurrentValue()
+    {
         return spinnerCurrentValue;
     }
 
-    public void setPlayerApp(ElizaChatPlayer elizaChatPlayer) {
+    public void setPlayerApp(ElizaChatPlayer elizaChatPlayer)
+    {
         this.elizaChatPlayer = elizaChatPlayer;
     }
 
-    private void OpenChat() {
+    private void OpenChat()
+    {
         chatStage = new Stage();
         chatStage.setTitle("chat");
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ElizaChatPlayer.class.getResource("/de/dfki/eliza/chat/Chat.fxml"));
-        try {
+        try
+        {
             chatRoot = loader.load();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             ex.printStackTrace();
         }
 
@@ -201,42 +216,53 @@ public class PlayerController implements Initializable {
     }
     private boolean isUser = false;
 
-    private void handleChatMessages() {
+    private void handleChatMessages()
+    {
         LinkedList<Conversation> conversations = elizaReader.getConversations();
         Iterator<Conversation> conversationIterator = conversations.iterator();
         Conversation conversation = conversationIterator.next();
         Iterator<Textable> messageIterator = null;
-        if (conversation != null && conversation.getTotalMessages() > 0) {
+        if (conversation != null && conversation.getTotalMessages() > 0)
+        {
             messageIterator = conversation.getMessages().iterator();
         }
 
         Iterator<Textable> finalMessageIterator = messageIterator;
-        Thread t = new Thread(new Runnable() {
+        Thread t = new Thread(new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 Iterator<Textable> messagesIt = finalMessageIterator;
-                while (isPlayButtonClicked) {
+                while (isPlayButtonClicked)
+                {
 
                     Path face;
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
                     chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
 
-                    if (messagesIt != null) {
+                    if (messagesIt != null)
+                    {
                         Textable m = messagesIt.next();
                         text = m.getText();
-                        try {
+                        try
+                        {
                             isUser = ((Message) m).isIsUserMessage();
-                        } catch (ClassCastException ex) {
+                        }
+                        catch (ClassCastException ex)
+                        {
                             text = "";
                         }
                         messageSender.send(text);
-                        if (conversationIterator.hasNext() && !messagesIt.hasNext()) {
+                        if (conversationIterator.hasNext() && !messagesIt.hasNext())
+                        {
                             messagesIt = conversationIterator.next().getMessages().iterator();
                         }
                     }
 
-                    if (!text.equalsIgnoreCase("")) {
+                    if (!text.equalsIgnoreCase(""))
+                    {
                         messages = new Label(text);
                         messages.setFont(new Font("Arial", 30));
                         messages.setWrapText(true);
@@ -253,7 +279,8 @@ public class PlayerController implements Initializable {
 
                         HBox box = new HBox();
 
-                        if (!isUser) {
+                        if (!isUser)
+                        {
                             createSystemMessageStyle(messages);
                             cc.setHalignment(HPos.LEFT);
                             box.setAlignment(Pos.CENTER_LEFT);
@@ -266,7 +293,8 @@ public class PlayerController implements Initializable {
                             pt.getChildren().clear();
                             pt.getChildren().addAll(fadeMessage, fadePath);
                             Platform.runLater(()
-                                    -> {
+                                    ->
+                            {
                                 chatGridPane.add(box, 0, rowIndex);
                                 messages.setVisible(true);
                                 face.setVisible(true);
@@ -277,7 +305,9 @@ public class PlayerController implements Initializable {
                             emoImage = new Image(emoImagePath);
                             ImageView emoImageView = chatController.getEmotionImageView();
                             emoImageView.setImage(emoImage);
-                        } else {
+                        }
+                        else
+                        {
                             createUserMessageStyle(messages);
 
                             box.setAlignment(Pos.CENTER_RIGHT);
@@ -291,8 +321,9 @@ public class PlayerController implements Initializable {
                             pt.getChildren().clear();
                             pt.getChildren().addAll(fadeMessage, fadePath);
                             Platform.runLater(()
-                                    -> {
-                                chatGridPane.add(box, colIndex, rowIndex);
+                                    ->
+                            {
+                                chatGridPane.add(box, 1, rowIndex);
                                 messages.setVisible(true);
                                 face.setVisible(true);
                                 pt.play();
@@ -305,9 +336,12 @@ public class PlayerController implements Initializable {
                         }
                     }
 
-                    try {
+                    try
+                    {
                         Thread.sleep(spinnerCurrentValue * 1000);
-                    } catch (InterruptedException ex) {
+                    }
+                    catch (InterruptedException ex)
+                    {
                         Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -318,7 +352,8 @@ public class PlayerController implements Initializable {
         t.start();
     }
 
-    public Path createLeftFace(Color color) {
+    public Path createLeftFace(Color color)
+    {
         Path p = new Path();
         p.getElements().add(new MoveTo(0, 0));
         p.getElements().add(new QuadCurveTo(5, 2, 10, -5));
@@ -331,7 +366,8 @@ public class PlayerController implements Initializable {
         return p;
     }
 
-    public Path creatRightFace(Color color) {
+    public Path creatRightFace(Color color)
+    {
         Path p = new Path();
         p.getElements().add(new MoveTo(0, 0));
         p.getElements().add(new QuadCurveTo(-5, 2, -10, -5));
@@ -344,7 +380,8 @@ public class PlayerController implements Initializable {
         return p;
     }
 
-    private void createFadeEffect(FadeTransition fadeTransition, Node node) {
+    private void createFadeEffect(FadeTransition fadeTransition, Node node)
+    {
         fadeTransition.setNode(node);
         fadeTransition.setFromValue(0.0);
         fadeTransition.setToValue(1.0);
@@ -352,7 +389,8 @@ public class PlayerController implements Initializable {
         fadeTransition.setAutoReverse(false);
     }
 
-    private void handleOpenedLabel() {
+    private void handleOpenedLabel()
+    {
         FadeTransition labelfade = new FadeTransition(Duration.millis(500));
         labelfade.setNode(openedLabel);
         labelfade.setFromValue(0.0);
@@ -363,14 +401,16 @@ public class PlayerController implements Initializable {
         labelfade.play();
     }
 
-    private void createSystemMessageStyle(Label message) {
+    private void createSystemMessageStyle(Label message)
+    {
         message.setStyle("-fx-background-color: #FF84CA; "
                 + "-fx-border-color: #FF84CA;  "
                 + "-fx-border-radius: 10 10 10 10;\n"
                 + "-fx-background-radius: 10 10 10 10;");
     }
 
-    private void createUserMessageStyle(Label message) {
+    private void createUserMessageStyle(Label message)
+    {
         message.setStyle("-fx-background-color: #DEDEDE; "
                 + "-fx-border-color: #DEDEDE;  "
                 + "-fx-border-radius: 10 10 10 10;\n"
