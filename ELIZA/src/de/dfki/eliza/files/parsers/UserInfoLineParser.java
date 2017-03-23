@@ -3,24 +3,35 @@ package de.dfki.eliza.files.parsers;
 import de.dfki.eliza.files.models.Info;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.parsers.dialog.*;
-import de.dfki.eliza.files.utils.NameRegexFinder;
-
+import de.dfki.eliza.files.utils.nameparser.DotParser;
+import de.dfki.eliza.files.utils.nameparser.InfoNameParser;
+import de.dfki.eliza.files.utils.nameparser.NameParserCollection;
+import de.dfki.eliza.files.utils.nameparser.NameRegexFinder;
 
 
 /**
  * Created by alvaro on 3/13/17.
  */
 public class UserInfoLineParser extends Dialog {
-    private NameRegexFinder regexFinder = new NameRegexFinder();
+
     private String agentName = "";
+
+    private NameParserCollection nameParsers = new NameParserCollection();
+
+    public UserInfoLineParser(){
+        super();
+        InfoNameParser regexFinder = new NameRegexFinder();
+        InfoNameParser dotParser = new DotParser();
+        nameParsers.add(regexFinder);
+        nameParsers.add(dotParser);
+    }
 
     @Override
     public boolean parseLine(String line) {
+
         dialogLine = new DialogLine(line, INFO_LINE);
         valueLine = new NoValueLine();
-        boolean hasName = regexFinder.parse(line);
-        agentName = regexFinder.getName();
-        return isParseable(line, hasName);
+        return isParseable(line);
     }
 
     @Override
@@ -35,8 +46,12 @@ public class UserInfoLineParser extends Dialog {
         return agentName;
     }
 
-    private boolean isParseable(String line, boolean hasName) {
-        return hasName && line.startsWith(INFO_LINE);
+    private boolean isParseable(String line) {
+        boolean lineStartsWithInfoLine = line.startsWith(INFO_LINE);
+        boolean isParseable = lineStartsWithInfoLine && line.contains(DotParser.NAME_START_SENTENCE);
+        if(isParseable)
+            agentName = nameParsers.getName(line);
+        return isParseable;
     }
 
 

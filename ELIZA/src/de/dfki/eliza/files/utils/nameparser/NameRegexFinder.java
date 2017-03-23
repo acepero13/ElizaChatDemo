@@ -1,4 +1,4 @@
-package de.dfki.eliza.files.utils;
+package de.dfki.eliza.files.utils.nameparser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * Created by alvaro on 3/14/17.
  */
-public class NameRegexFinder {
+public class NameRegexFinder implements InfoNameParser{
     private String name = "";
     private Pattern p;
     private boolean found = false;

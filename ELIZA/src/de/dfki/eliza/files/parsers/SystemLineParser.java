@@ -11,16 +11,20 @@ import de.dfki.eliza.files.parsers.factories.ConversationFactory;
  * Created by alvaro on 3/13/17.
  */
 public class SystemLineParser extends Dialog {
-    private String SystemName = "{Name}";
+    String systemName = "{Name}";
 
     @Override
     public boolean parseLine(String line) {
-        SystemName = ConversationFactory.getInstance().getConversation().getSystemName();
-        SeparatorParser parser = new SeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
+        getSystemName();
+        IntSeparatorParser parser = new IntSeparatorParser(VALUE_TOPIC_SEPARATOR, line, COUNT_PIPE_SEPARATOR_DEPRECATED);
         valueLine = new ValueLine(parser);
-        dialogLine = new DialogLine(line, SystemName);
-        return line.startsWith(SystemName);
+        dialogLine = new DialogLine(line, systemName);
+        return line.startsWith(systemName);
 
+    }
+
+    void getSystemName() {
+        systemName = ConversationFactory.getInstance().getConversation().getSystemName();
     }
 
     @Override

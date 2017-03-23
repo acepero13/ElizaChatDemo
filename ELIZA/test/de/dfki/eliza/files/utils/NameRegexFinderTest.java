@@ -1,5 +1,6 @@
 package de.dfki.eliza.files.utils;
 
+import de.dfki.eliza.files.utils.nameparser.NameRegexFinder;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
