@@ -71,6 +71,15 @@ public class IntSeparatorParserTest {
         assertEquals(1, parser.getIntAt(0));
     }
 
+    /*@Test
+    public void test_parse_TextWithMorePipesAndNumbersInsidePipes_ArrayWithValues() {
+        String text = "Bla bla bla | bla bla | 09:10:12 | bla |13| bla bla bla| bla |1|2|3|";
+        makeParser("\\|", text, 3);
+        boolean res = parser.parse();
+        assertTrue(res);
+        assertEquals(2, parser.getIntAt(1));
+    }*/
+
     @Test
     public void test_parse_SeparatorHasThreeValues_ArrayWithThreeValues() {
         makeParser("#", "#31#0#3", 3);

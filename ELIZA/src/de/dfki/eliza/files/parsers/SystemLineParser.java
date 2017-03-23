@@ -29,7 +29,10 @@ public class SystemLineParser extends Dialog {
 
     @Override
     public void postParsed() {
-        Textable m = new Message(dialogLine.getText(), valueLine.getIntAt(0), valueLine.getIntAt(1));
+        String authorName = systemName+ ":";
+        Textable m = Message.createAgentMessage(authorName, dialogLine.getText(),
+                valueLine.getIntAt(Dialog.VALUE_INDEX),
+                valueLine.getIntAt(Dialog.TOPIC_INDEX));
         m.isUser(false);
         conversationFactory.getConversation().addMessage(m);
     }

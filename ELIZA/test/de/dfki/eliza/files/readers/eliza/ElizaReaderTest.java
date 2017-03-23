@@ -74,6 +74,29 @@ public class ElizaReaderTest {
         assertEquals(6, c.getTotalMessages());
     }
 
+    @Test
+    public void test_write_FakeLinesWithDictEntryAsSystemName_WrittenLines() {
+        String name = "{dict-entry}";
+        LinkedList<String> conversations = makeNamedConversation(name);
+        FakeFileSystem fakeFS = makeFileSystem(conversations);
+        makeReader("", fakeFS);
+        reader.open();
+        reader.read();
+        ((ElizaReader)reader).getTotalConversations();
+        Conversation c = ((ElizaReader) reader).conversations.getFirst();
+        String res = ((ElizaReader) reader).write();
+        String expected = "--------------------------\n" +
+                            "info: Sie sind nun im T-Mobile Beratungs-Chat. Ein Kundenberater wird sich in Kürze mit Ihnen verbinden und sich sofort um Ihre Fragen kümmern.\n"
+                        +   "info: Schön, dass wir miteinander verbunden sind, mein Name ist " + name +". Ich beantworte Ihnen gerne Ihre Fragen zu Ihrer Webbestellung im Privatkundenbereich.\n"
+                        +   "Sie: Hallo " + name +", ich habe aktuell den Tarif {dict-entry} Max {Potentielle_ID} i ohne Bindung. |-1|-1|-1|\n"
+                        +   name + ": Guten Tag werter Kunde |0|3|-1|\n"
+                        +   name+ ": Guten Tag werter Kunde |0|3|-1|\n"
+                        +   "Sie: Vielen Dank für die Infos. Und wenn ich nun |-1|-1|-1|\n"
+                        +   "#31#1#-1\n" ;
+        assertEquals(expected, res);
+
+    }
+
     private FakeFileSystem makeFileSystem(LinkedList<String> conversations) {
         FakeFileSystem fakeFS = new FakeFileSystem("/tmp/test.txt");
         InputStreamReader input = new InputStreamReader(System.in);
@@ -91,9 +114,8 @@ public class ElizaReaderTest {
         lines.add("Sie: Hallo " + name +", ich habe aktuell den Tarif {dict-entry} Max {Potentielle_ID} i ohne Bindung. ");
         lines.add(name + ": Guten Tag werter Kunde |0|3|");
         lines.add(name + ": Guten Tag werter Kunde |0|3|");
-        lines.add("Sie: Vielen Dank für die Infos. Und wenn ich nun");
+        lines.add("Sie: Vielen Dank für die Infos. Und wenn ich nun|-1|-1|-1|");
         lines.add("#31#1");
-        lines.add("#31#0");
         return lines;
     }
 

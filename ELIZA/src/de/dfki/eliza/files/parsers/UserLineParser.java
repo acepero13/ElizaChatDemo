@@ -12,6 +12,7 @@ import java.util.LinkedList;
  * Created by alvaro on 3/13/17.
  */
 public class UserLineParser extends Dialog {
+
     private LinkedList<IntSeparatorParser> parsers = new LinkedList<>();
 
     @Override
@@ -31,7 +32,12 @@ public class UserLineParser extends Dialog {
     }
 
     public void postParsed(){
-        Textable m = new Message(dialogLine.getText(), valueLine.getIntAt(0), valueLine.getIntAt(1));
+        Textable m = Message.createUserMessage(
+                Dialog.USER_NAME,
+                dialogLine.getText(),
+                valueLine.getIntAt(VALUE_INDEX),
+                valueLine.getIntAt(TOPIC_INDEX),
+                valueLine.getIntAt(ASSESSMENT_INDEX));
         m.isUser(true);
         conversationFactory.getConversation().addMessage(m);
     }

@@ -35,9 +35,8 @@ public class Sender {
     {
         byte[] sendData = message.getBytes();
         try {
-        senderSocket = new DatagramSocket();
-        sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, 9876);
-        
+            senderSocket = new DatagramSocket();
+            sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, 9876);
             senderSocket.send(sendPacket);
         } catch (IOException ex) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, ex);

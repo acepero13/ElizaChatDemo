@@ -28,7 +28,6 @@ public class UserInfoLineParser extends Dialog {
 
     @Override
     public boolean parseLine(String line) {
-
         dialogLine = new DialogLine(line, INFO_LINE);
         valueLine = new NoValueLine();
         return isParseable(line);
