@@ -12,13 +12,13 @@ import de.dfki.eliza.files.utils.nameparser.NameRegexFinder;
 /**
  * Created by alvaro on 3/13/17.
  */
-public class UserInfoLineParser extends Dialog {
+public class InfoUserLineParser extends Dialog {
 
     private String agentName = "";
 
     private NameParserCollection nameParsers = new NameParserCollection();
 
-    public UserInfoLineParser(){
+    public InfoUserLineParser(){
         super();
         InfoNameParser regexFinder = new NameRegexFinder();
         InfoNameParser dotParser = new DotParser();

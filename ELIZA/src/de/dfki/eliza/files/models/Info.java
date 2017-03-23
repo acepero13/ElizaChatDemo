@@ -1,7 +1,7 @@
 package de.dfki.eliza.files.models;
 
 import de.dfki.eliza.files.filestystem.Writable;
-import de.dfki.eliza.files.parsers.UserInfoLineParser;
+import de.dfki.eliza.files.parsers.InfoUserLineParser;
 
 /**
  * Created by alvaro on 3/14/17.
@@ -26,7 +26,7 @@ public class Info implements Textable, Writable {
     public String write() {
         String line = "";
         if(!getText().isEmpty()){
-            line = UserInfoLineParser.INFO_LINE + " " + getText();
+            line = InfoUserLineParser.INFO_LINE + " " + getText();
         }
         return line;
     }

@@ -21,7 +21,7 @@ public class ElizaReader extends FileReader implements Writable {
         fileSystem = fs;
         filename = fileName;
         firstDialogParser = new NewChatParser(conversations);
-        Dialog infoUserDialog = new UserInfoLineParser();
+        Dialog infoUserDialog = new InfoUserLineParser();
         Dialog infoDialog = new InfoLineParser();
         Dialog userLine = new UserLineParser();
         Dialog systemLine = new SystemLineParser();

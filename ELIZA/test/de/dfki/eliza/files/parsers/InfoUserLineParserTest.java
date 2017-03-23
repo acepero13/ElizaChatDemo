@@ -1,6 +1,5 @@
 package de.dfki.eliza.files.parsers;
 
-import de.dfki.eliza.files.builders.ChatParser;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,8 +7,8 @@ import static org.junit.Assert.*;
 /**
  * Created by alvaro on 3/13/17.
  */
-public class UserInfoLineParserTest {
-    private UserInfoLineParser parser;
+public class InfoUserLineParserTest {
+    private InfoUserLineParser parser;
 
     @Test
     public void test_parse_LineWithInfoHeaderAndUserInfo_True() {
@@ -85,6 +84,6 @@ public class UserInfoLineParserTest {
 
 
     private void makeParser() {
-        parser = new UserInfoLineParser();
+        parser = new InfoUserLineParser();
     }
 }
