@@ -43,6 +43,8 @@ public class Conversation implements Writable {
         return messages;
     }
 
+
+
     @Override
     public String write() {
         String line = CHAT_INIT_MARKER + NEW_LINE_SEPARATOR;
