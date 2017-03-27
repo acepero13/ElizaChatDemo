@@ -6,6 +6,8 @@
 package de.dfki.eliza.chat;
 
 import de.dfki.connection.LiveSenderReceiver;
+import de.dfki.connection.Sender;
+import java.net.DatagramPacket;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
@@ -58,11 +60,15 @@ public class AgentChatController implements Initializable
     @FXML
     private Button agentSendButton;
     
+   
+
     LiveSenderReceiver liveSenderReceiver;
 
     private GridPane chatGridPane;
     private HBox messageHBox;
-    
+
+    private String receiveMessage = "";
+
     int rowIndex = 0;
 
     private FadeTransition fadeMessage = new FadeTransition(Duration.millis(500));
@@ -80,12 +86,16 @@ public class AgentChatController implements Initializable
             public void run()
             {
                 while (true)
-                {                    
-                    liveSenderReceiver.recvString();
+                {
+                    receiveMessage = liveSenderReceiver.recvString();
+                    if (!receiveMessage.equalsIgnoreCase(""))
+                    {
+                        handleReceiveMessage();
+                    }
                 }
             }
         }).start();
-        
+
         chatGridPane = new GridPane();
         AgentChatScrollPane.setContent(chatGridPane);
         AgentChatScrollPane.setStyle("-fx-background: #FFFFFF; -fx-border-color: #FFFFFF;");
@@ -93,19 +103,62 @@ public class AgentChatController implements Initializable
         {
             handleSendButton();
         });
-        
+
         agentInputtextArea.setOnKeyPressed(new EventHandler<KeyEvent>()
-    {
-        @Override
-        public void handle(KeyEvent ke)
         {
-            if (ke.getCode().equals(KeyCode.ENTER))
+            @Override
+            public void handle(KeyEvent ke)
             {
-                handleSendButton();
-                ke.consume();
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                    handleSendButton();
+                    ke.consume();
+                }
             }
-        }
-    });
+        });
+    }
+
+    private void handleReceiveMessage()
+    {
+        Path face;
+        Label message = new Label(receiveMessage);
+        message.setFont(new Font("Arial", 30));
+        message.setWrapText(true);
+        message.setPadding(new Insets(5, 5, 5, 5));
+        message.setMaxWidth(800);
+        message.setVisible(false);
+
+        ColumnConstraints cc = new ColumnConstraints();
+        cc.setFillWidth(true);
+        cc.setHgrow(Priority.ALWAYS);
+        chatGridPane.getColumnConstraints().clear();
+        chatGridPane.getColumnConstraints().add(cc);
+        chatGridPane.setVgap(10);
+
+        AgentChatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
+        messageHBox = new HBox();
+
+        createUserMessageStyle(message);
+
+        cc.setHalignment(HPos.LEFT);
+        messageHBox.setAlignment(Pos.CENTER_LEFT);
+        GridPane.setHalignment(messageHBox, HPos.LEFT);
+        face = createLeftFace(Color.rgb(255, 132, 202));
+        face.setVisible(false);
+        messageHBox.getChildren().addAll(face, message);
+        createFadeEffect(fadeMessage, message);
+        createFadeEffect(fadePath, face);
+        pt.getChildren().clear();
+        pt.getChildren().addAll(fadeMessage, fadePath);
+        Platform.runLater(() ->
+        {
+            chatGridPane.add(messageHBox, 0, rowIndex);
+            message.setVisible(true);
+            face.setVisible(true);
+            pt.play();
+        });
+        rowIndex++;
+
     }
 
     private void handleSendButton()
@@ -129,7 +182,7 @@ public class AgentChatController implements Initializable
             chatGridPane.setVgap(10);
 
             AgentChatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
-            
+
             messageHBox = new HBox();
 
             createSystemMessageStyle(message);
@@ -144,14 +197,13 @@ public class AgentChatController implements Initializable
             pt.getChildren().clear();
             pt.getChildren().addAll(fadeMessage, fadePath);
 
-            
-                chatGridPane.add(messageHBox, 1, rowIndex);
-                message.setVisible(true);
-                face.setVisible(true);
-                pt.play();
-            
-            
             rowIndex++;
+            chatGridPane.add(messageHBox, 1, rowIndex);
+            message.setVisible(true);
+            face.setVisible(true);
+            pt.play();
+
+            liveSenderReceiver.sendString(liveSenderReceiver.getDatagramPacket(), message.getText());
             agentInputtextArea.setText("");
         }
     }
@@ -164,6 +216,14 @@ public class AgentChatController implements Initializable
                 + "-fx-background-radius: 10 10 10 10;");
     }
 
+    private void createUserMessageStyle(Label message)
+    {
+        message.setStyle("-fx-background-color: #DEDEDE; "
+                + "-fx-border-color: #DEDEDE;  "
+                + "-fx-border-radius: 10 10 10 10;\n"
+                + "-fx-background-radius: 10 10 10 10;");
+    }
+
     public Path creatRightFace(Color color)
     {
         Path p = new Path();
@@ -172,6 +232,20 @@ public class AgentChatController implements Initializable
         p.getElements().add(new LineTo(-10, 10));
         p.getElements().add(new ClosePath());
         p.setTranslateX(-2);
+        p.setFill(color);
+        p.setStroke(color);
+
+        return p;
+    }
+    
+    public Path createLeftFace(Color color)
+    {
+        Path p = new Path();
+        p.getElements().add(new MoveTo(0, 0));
+        p.getElements().add(new QuadCurveTo(5, 2, 10, -5));
+        p.getElements().add(new LineTo(10, 10));
+        p.getElements().add(new ClosePath());
+        p.setTranslateX(2);
         p.setFill(color);
         p.setStroke(color);
 

@@ -30,6 +30,7 @@ public class LiveSenderReceiver
         try
         {
             mSocket = new DatagramSocket(mLocalPort);
+            
         }
         catch (SocketException ex)
         {
