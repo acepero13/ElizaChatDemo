@@ -22,6 +22,7 @@ public class Sender {
     DatagramPacket sendPacket;
     InetAddress inetAddress;
     
+    
     public  Sender()
     {
         try {
@@ -45,5 +46,17 @@ public class Sender {
         
         senderSocket.close();
     }
+
+    public InetAddress getInetAddress()
+    {
+        return inetAddress;
+    }
+
+    public void setInetAddress(InetAddress inetAddress)
+    {
+        this.inetAddress = inetAddress;
+    }
+    
+    
     
 }

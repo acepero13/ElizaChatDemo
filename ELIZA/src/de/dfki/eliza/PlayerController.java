@@ -6,6 +6,7 @@
 package de.dfki.eliza;
 
 import de.dfki.connection.Sender;
+import de.dfki.eliza.chat.AgentChatController;
 import de.dfki.eliza.chat.ChatController;
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class PlayerController implements Initializable
     @FXML
     private Button playButton;
     @FXML
+    private Button liveChatButton;
+    @FXML
     private Spinner<Integer> playerSpinner;
     @FXML
     private Label openedLabel;
@@ -88,6 +91,10 @@ public class PlayerController implements Initializable
     private Stage chatStage;
     private AnchorPane chatRoot;
     private ChatController chatController;
+    
+    private Stage liveChatStage;
+    private AnchorPane agentChatRoot;
+    private AgentChatController agentChatController;
 
     private ScrollPane chatScrollPane;
     private GridPane chatGridPane;
@@ -119,6 +126,11 @@ public class PlayerController implements Initializable
                 handlePlayButton();
             }
 
+        });
+        
+        liveChatButton.setOnAction((event) ->
+        {
+            handleLiveChatButton();
         });
 
         openFileButton.setOnAction((event) ->
@@ -192,7 +204,7 @@ public class PlayerController implements Initializable
     {
         this.elizaChatPlayer = elizaChatPlayer;
     }
-
+    
     private void OpenChat()
     {
         chatStage = new Stage();
@@ -213,6 +225,28 @@ public class PlayerController implements Initializable
         chatStage.setScene(scene);
         chatStage.setX(600);
         chatStage.show();
+    }
+
+    private void handleLiveChatButton()
+    {
+        liveChatStage = new Stage();
+        liveChatStage.setTitle("chat");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ElizaChatPlayer.class.getResource("/de/dfki/eliza/chat/AgentLiveChat.fxml"));
+        try
+        {
+            agentChatRoot = loader.load();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
+        agentChatController = loader.getController();
+        Scene scene = new Scene(agentChatRoot);
+        liveChatStage.setScene(scene);
+        liveChatStage.setX(600);
+        liveChatStage.show();
     }
     private boolean isUser = false;
 
@@ -236,7 +270,6 @@ public class PlayerController implements Initializable
                 Iterator<Textable> messagesIt = finalMessageIterator;
                 while (isPlayButtonClicked)
                 {
-
                     Path face;
                     chatScrollPane = chatController.getChatScrollPane();
                     chatGridPane = chatController.getChatGridPane();
@@ -292,8 +325,7 @@ public class PlayerController implements Initializable
                             createFadeEffect(fadePath, face);
                             pt.getChildren().clear();
                             pt.getChildren().addAll(fadeMessage, fadePath);
-                            Platform.runLater(()
-                                    ->
+                            Platform.runLater(()->
                             {
                                 chatGridPane.add(box, 0, rowIndex);
                                 messages.setVisible(true);
@@ -320,8 +352,7 @@ public class PlayerController implements Initializable
                             createFadeEffect(fadePath, face);
                             pt.getChildren().clear();
                             pt.getChildren().addAll(fadeMessage, fadePath);
-                            Platform.runLater(()
-                                    ->
+                            Platform.runLater(()->
                             {
                                 chatGridPane.add(box, 1, rowIndex);
                                 messages.setVisible(true);
