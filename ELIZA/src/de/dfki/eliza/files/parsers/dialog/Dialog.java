@@ -13,6 +13,9 @@ public abstract class Dialog implements ChatParser {
     public static final String VALUE_TOPIC_SEPARATOR = "\\|";
     public static final int COUNT_PIPE_SEPARATOR_DEPRECATED = 2;
     public static final int COUNT_PIPE_SEPARATOR = 3;
+    public static final int VALUE_INDEX = 1;
+    public static final int TOPIC_INDEX = 0;
+    public static final int ASSESSMENT_INDEX = 2;
 
     protected DialogLineBehavior dialogLine;
     protected ValueLineBehavior valueLine;
