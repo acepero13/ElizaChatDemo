@@ -63,6 +63,7 @@ public class AgentChatController implements Initializable
    
 
     LiveSenderReceiver liveSenderReceiver;
+    DatagramPacket dataPackage;
 
     private GridPane chatGridPane;
     private HBox messageHBox;
@@ -88,6 +89,7 @@ public class AgentChatController implements Initializable
                 while (true)
                 {
                     receiveMessage = liveSenderReceiver.recvString();
+                    dataPackage = liveSenderReceiver.getDatagramPacket();
                     if (!receiveMessage.equalsIgnoreCase(""))
                     {
                         handleReceiveMessage();
@@ -203,7 +205,7 @@ public class AgentChatController implements Initializable
             face.setVisible(true);
             pt.play();
 
-            liveSenderReceiver.sendString(liveSenderReceiver.getDatagramPacket(), message.getText());
+            liveSenderReceiver.sendString(dataPackage, message.getText());
             agentInputtextArea.setText("");
         }
     }
