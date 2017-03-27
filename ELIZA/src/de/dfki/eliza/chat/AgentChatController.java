@@ -145,7 +145,7 @@ public class AgentChatController implements Initializable
         cc.setHalignment(HPos.LEFT);
         messageHBox.setAlignment(Pos.CENTER_LEFT);
         GridPane.setHalignment(messageHBox, HPos.LEFT);
-        face = createLeftFace(Color.rgb(255, 132, 202));
+        face = createLeftFace(Color.rgb(222, 222, 222));
         face.setVisible(false);
         messageHBox.getChildren().addAll(face, message);
         createFadeEffect(fadeMessage, message);
