@@ -24,19 +24,19 @@ public class SystemRender extends MessageRender {
     protected void customRender(int i, Textable textable) {
         Path face;
         createSystemMessageStyle(messages);
-        columnConstraints.setHalignment(HPos.LEFT);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        GridPane.setHalignment(hBox, HPos.LEFT);
-        face = createLeftFace(Color.rgb(255, 132, 202));
+        columnConstraints.setHalignment(HPos.RIGHT);
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        GridPane.setHalignment(hBox, HPos.RIGHT);
+        face = creatRightFace(Color.rgb(255, 132, 202));
         face.setVisible(false);
-        hBox.getChildren().addAll(face, messages);
+        hBox.getChildren().addAll(messages, face);
         createFadeEffect(fadeMessage, messages);
         createFadeEffect(fadePath, face);
         pt.getChildren().clear();
         pt.getChildren().addAll(fadeMessage, fadePath);
         Platform.runLater(()->
         {
-            chatGridPane.add(hBox, 0, i);
+            chatGridPane.add(hBox, 1, i);
             messages.setVisible(true);
             face.setVisible(true);
             pt.play();

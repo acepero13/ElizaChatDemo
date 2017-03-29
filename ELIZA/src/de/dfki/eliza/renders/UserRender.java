@@ -23,20 +23,19 @@ public class UserRender extends MessageRender {
         Path face;
         createUserMessageStyle(messages);
 
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-        GridPane.setHalignment(hBox, HPos.RIGHT);
-        columnConstraints.setHalignment(HPos.RIGHT);
-        face = creatRightFace(Color.rgb(222, 222, 222));
+        hBox.setAlignment(Pos.BASELINE_LEFT);
+        GridPane.setHalignment(hBox, HPos.LEFT);
+        columnConstraints.setHalignment(HPos.LEFT);
+        face = createLeftFace(Color.rgb(222, 222, 222));
         face.setVisible(false);
-        hBox.getChildren().addAll(messages, face);
+        hBox.getChildren().addAll(face, messages);
         createFadeEffect(fadeMessage, messages);
         createFadeEffect(fadePath, face);
         pt.getChildren().clear();
         pt.getChildren().addAll(fadeMessage, fadePath);
         Platform.runLater(()->
         {
-            System.out.println("----------------------------------------------------------------");
-            chatGridPane.add(hBox, 1, i);
+            chatGridPane.add(hBox, 0, i);
             messages.setVisible(true);
             face.setVisible(true);
             pt.play();
