@@ -202,6 +202,7 @@ public class AgentChatController implements Initializable
     private void handleSendButton()
     {
         String text = agentInputtextArea.getText();
+        agentInputtextArea.setText("");
         Path face;
         if (!text.isEmpty() && dataPackage!=null)
         {
@@ -240,11 +241,11 @@ public class AgentChatController implements Initializable
             message.setVisible(true);
             face.setVisible(true);
             pt.play();
-
+            
             liveSenderReceiver.sendString(dataPackage, message.getText()); 
             
             SA_liveSenderReceiver.sendString(SA_DatagramPacket, message.getText());
-            agentInputtextArea.setText("");
+            
 
         }
     }
