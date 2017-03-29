@@ -22,7 +22,16 @@ public class LiveSenderReceiver
     private DatagramSocket mSocket;
     private DatagramPacket receivePacket;
     int mLocalPort = 8880;
+    
+    public LiveSenderReceiver()
+    {
+        
+    }
 
+    public LiveSenderReceiver(int port)
+    {
+        mLocalPort = port;
+    }
     public final void start()
     {
         try

@@ -8,8 +8,12 @@ package de.dfki.eliza.chat;
 import de.dfki.connection.LiveSenderReceiver;
 import de.dfki.connection.Sender;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
@@ -69,12 +73,15 @@ public class AgentChatController implements Initializable
     Label label4;
 
     LiveSenderReceiver liveSenderReceiver;
+    LiveSenderReceiver SA_liveSenderReceiver;
     DatagramPacket dataPackage;
+    DatagramPacket SA_DatagramPacket;
 
     private GridPane chatGridPane;
     private HBox messageHBox;
 
     private String receiveMessage = "";
+    private String SA_receivedMessage = "";
 
     int rowIndex = 0;
 
@@ -86,6 +93,8 @@ public class AgentChatController implements Initializable
     public void initialize(URL location, ResourceBundle resources)
     {
         liveSenderReceiver = new LiveSenderReceiver();
+        SA_liveSenderReceiver = new LiveSenderReceiver(8002);
+        SA_liveSenderReceiver.start();
         liveSenderReceiver.start();
         new Thread(new Runnable()
         {
@@ -95,10 +104,31 @@ public class AgentChatController implements Initializable
                 while (true)
                 {
                     receiveMessage = liveSenderReceiver.recvString();
+//                    SA_receivedMessage = SA_liveSenderReceiver.recvString();
+                    
                     dataPackage = liveSenderReceiver.getDatagramPacket();
+//                    SA_DatagramPacket = SA_liveSenderReceiver.getDatagramPacket();
                     if (!receiveMessage.equalsIgnoreCase(""))
                     {
                         handleReceiveMessage();
+                    }
+                }
+            }
+        }).start();
+        
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    SA_receivedMessage = SA_liveSenderReceiver.recvString();
+                    SA_DatagramPacket = SA_liveSenderReceiver.getDatagramPacket();
+                    
+                    if (!SA_receivedMessage.equalsIgnoreCase(""))
+                    {
+                        System.out.println(SA_receivedMessage);
                     }
                 }
             }
@@ -211,7 +241,9 @@ public class AgentChatController implements Initializable
             face.setVisible(true);
             pt.play();
 
-            liveSenderReceiver.sendString(dataPackage, message.getText());
+            liveSenderReceiver.sendString(dataPackage, message.getText()); 
+            
+            SA_liveSenderReceiver.sendString(SA_DatagramPacket, message.getText());
             agentInputtextArea.setText("");
 
         }
