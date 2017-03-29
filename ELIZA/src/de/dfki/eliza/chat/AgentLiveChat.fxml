@@ -22,22 +22,22 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </ImageView>
-                  <Label prefHeight="38.0" prefWidth="136.0" text="attack other">
+                  <Label fx:id="label1" prefHeight="38.0" prefWidth="136.0" text="attack other" visible="false">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
-                  <Label text="atack self">
+                  <Label fx:id="label2" text="atack self" visible="false">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="28.0" prefWidth="60.0" text="avoid">
+                  <Label fx:id="label3" prefHeight="28.0" prefWidth="60.0" text="avoid" visible="false">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
-                  <Label text="withdrawl">
+                  <Label fx:id="label4" text="withdrawl" visible="false">
                      <font>
                         <Font name="System Bold" size="22.0" />
                      </font>
