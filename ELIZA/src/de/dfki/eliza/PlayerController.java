@@ -12,27 +12,25 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.dfki.eliza.files.filestystem.FileSystemAble;
+import de.dfki.eliza.chat.ChatManager;
+import de.dfki.eliza.files.exceptions.NoValidConversation;
+import de.dfki.eliza.files.filestystem.FileSystemReadable;
 import de.dfki.eliza.files.filestystem.eliza.ElizaFileSystem;
 import de.dfki.eliza.files.models.Conversation;
-import de.dfki.eliza.files.models.Message;
 import de.dfki.eliza.files.models.Textable;
 import de.dfki.eliza.files.readers.eliza.ElizaReader;
+import de.dfki.eliza.renderer.DummyRender;
+import de.dfki.eliza.renderer.Renderable;
+import de.dfki.eliza.renders.SystemRender;
+import de.dfki.eliza.renders.UserRender;
 import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,17 +40,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ClosePath;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.QuadCurveTo;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -103,12 +91,10 @@ public class PlayerController implements Initializable
 
     Sender messageSender;
     String text = "";
-    int rowIndex = 0;
     private boolean isUser = false;
+    private ChatManager chatManager;
+    private int rowIndex = 0;
 
-    private FadeTransition fadeMessage = new FadeTransition(Duration.millis(500));
-    private FadeTransition fadePath = new FadeTransition(Duration.millis(500));
-    ParallelTransition pt = new ParallelTransition();
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -147,6 +133,7 @@ public class PlayerController implements Initializable
         {
             spinnerCurrentValue = playerSpinner.getValue();
         });
+
     }
 
     private void handlePlayButton()
@@ -190,10 +177,19 @@ public class PlayerController implements Initializable
 
     private void loadFile(String filename)
     {
-        FileSystemAble fileSystem = new ElizaFileSystem(filename);
-        elizaReader = new ElizaReader(filename, fileSystem);
+
+        chatScrollPane = chatController.getChatScrollPane();
+        chatGridPane = chatController.getChatGridPane();
+        chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
+
+        FileSystemReadable fileSystem = new ElizaFileSystem(filename);
+        Renderable systemRender = new SystemRender(chatGridPane);
+        Renderable userRender = new UserRender(chatGridPane);
+        Renderable infoRender = new DummyRender();
+        elizaReader = new ElizaReader(fileSystem, infoRender, userRender, systemRender);
         elizaReader.open();
         elizaReader.read();
+        chatManager = new ChatManager(elizaReader.getConversations());
     }
 
     public int getSpinnerCurrentValue()
@@ -252,178 +248,11 @@ public class PlayerController implements Initializable
 
     private void handleChatMessages()
     {
-        
-        LinkedList<Conversation> conversations = elizaReader.getConversations();
-        Iterator<Conversation> conversationIterator = conversations.iterator();
-        Conversation conversation = conversationIterator.next();
-        Iterator<Textable> messageIterator = null;
-        if (conversation != null && conversation.getTotalMessages() > 0)
-        {
-            messageIterator = conversation.getMessages().iterator();
-        }
-
-        Iterator<Textable> finalMessageIterator = messageIterator;
-        Thread t = new Thread(new Runnable()
-        {
-            int sleepTime = 0;
-            
-            @Override
-            public void run()
-            {
-                Iterator<Textable> messagesIt = finalMessageIterator;
-                while (isPlayButtonClicked)
-                {
-                    Path face;
-                    chatScrollPane = chatController.getChatScrollPane();
-                    chatGridPane = chatController.getChatGridPane();
-                    chatScrollPane.vvalueProperty().bind(chatGridPane.heightProperty());
-
-                    if (messagesIt != null)
-                    {
-                        Textable m = messagesIt.next();
-                        text = m.getText();
-                        try
-                        {
-                            isUser = ((Message) m).isIsUserMessage();
-                            sleepTime = spinnerCurrentValue * 1000;
-                        }
-                        catch (ClassCastException ex)
-                        {
-                            text = "";
-                            sleepTime = 0;
-                        }
-                        messageSender.send(text);
-                        if (conversationIterator.hasNext() && !messagesIt.hasNext())
-                        {
-                            messagesIt = conversationIterator.next().getMessages().iterator();
-                        }
-                    }
-
-                    if (!text.equalsIgnoreCase(""))
-                    {
-                        messages = new Label(text);
-                        messages.setFont(new Font("Arial", 30));
-                        messages.setWrapText(true);
-                        messages.setPadding(new Insets(5, 5, 5, 5));
-                        messages.setMaxWidth(800);
-                        messages.setVisible(false);
-
-                        ColumnConstraints cc = new ColumnConstraints();
-                        cc.setFillWidth(true);
-                        cc.setHgrow(Priority.ALWAYS);
-                        chatGridPane.getColumnConstraints().clear();
-                        chatGridPane.getColumnConstraints().add(cc);
-                        chatGridPane.setVgap(10);
-
-                        HBox box = new HBox();
-
-                        if (!isUser)
-                        {
-                            createSystemMessageStyle(messages);
-                            cc.setHalignment(HPos.LEFT);
-                            box.setAlignment(Pos.CENTER_LEFT);
-                            GridPane.setHalignment(box, HPos.LEFT);
-                            face = createLeftFace(Color.rgb(255, 132, 202));
-                            face.setVisible(false);
-                            box.getChildren().addAll(face, messages);
-                            createFadeEffect(fadeMessage, messages);
-                            createFadeEffect(fadePath, face);
-                            pt.getChildren().clear();
-                            pt.getChildren().addAll(fadeMessage, fadePath);
-                            Platform.runLater(()->
-                            {
-                                chatGridPane.add(box, 0, rowIndex);
-                                messages.setVisible(true);
-                                face.setVisible(true);
-                                pt.play();
-                            });
-                            rowIndex++;
-                            String emoImagePath = getClass().getClassLoader().getResource("smile.png").toExternalForm();
-                            emoImage = new Image(emoImagePath);
-                            ImageView emoImageView = chatController.getEmotionImageView();
-                            emoImageView.setImage(emoImage);
-                        }
-                        else
-                        {
-                            createUserMessageStyle(messages);
-
-                            box.setAlignment(Pos.CENTER_RIGHT);
-                            GridPane.setHalignment(box, HPos.RIGHT);
-                            cc.setHalignment(HPos.RIGHT);
-                            face = creatRightFace(Color.rgb(222, 222, 222));
-                            face.setVisible(false);
-                            box.getChildren().addAll(messages, face);
-                            createFadeEffect(fadeMessage, messages);
-                            createFadeEffect(fadePath, face);
-                            pt.getChildren().clear();
-                            pt.getChildren().addAll(fadeMessage, fadePath);
-                            Platform.runLater(()->
-                            {
-                                chatGridPane.add(box, 1, rowIndex);
-                                messages.setVisible(true);
-                                face.setVisible(true);
-                                pt.play();
-                            });
-                            rowIndex++;
-                            String emoImagePath = getClass().getClassLoader().getResource("sad.png").toExternalForm();
-                            emoImage = new Image(emoImagePath);
-                            ImageView emoImageView = chatController.getEmotionImageView();
-                            emoImageView.setImage(emoImage);
-                        }
-                    }
-
-                    try
-                    {
-                        Thread.sleep(sleepTime);
-                    }
-                    catch (InterruptedException ex)
-                    {
-                        Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-            }
-        });
-
+        ChatRunner chatRunner = new ChatRunner();
+        Thread t = new Thread(chatRunner);
         t.start();
     }
 
-    public Path createLeftFace(Color color)
-    {
-        Path p = new Path();
-        p.getElements().add(new MoveTo(0, 0));
-        p.getElements().add(new QuadCurveTo(5, 2, 10, -5));
-        p.getElements().add(new LineTo(10, 10));
-        p.getElements().add(new ClosePath());
-        p.setTranslateX(2);
-        p.setFill(color);
-        p.setStroke(color);
-
-        return p;
-    }
-
-    public Path creatRightFace(Color color)
-    {
-        Path p = new Path();
-        p.getElements().add(new MoveTo(0, 0));
-        p.getElements().add(new QuadCurveTo(-5, 2, -10, -5));
-        p.getElements().add(new LineTo(-10, 10));
-        p.getElements().add(new ClosePath());
-        p.setTranslateX(-2);
-        p.setFill(color);
-        p.setStroke(color);
-
-        return p;
-    }
-
-    private void createFadeEffect(FadeTransition fadeTransition, Node node)
-    {
-        fadeTransition.setNode(node);
-        fadeTransition.setFromValue(0.0);
-        fadeTransition.setToValue(1.0);
-        fadeTransition.setCycleCount(1);
-        fadeTransition.setAutoReverse(false);
-    }
 
     private void handleOpenedLabel()
     {
@@ -437,20 +266,47 @@ public class PlayerController implements Initializable
         labelfade.play();
     }
 
-    private void createSystemMessageStyle(Label message)
-    {
-        message.setStyle("-fx-background-color: #FF84CA; "
-                + "-fx-border-color: #FF84CA;  "
-                + "-fx-border-radius: 10 10 10 10;\n"
-                + "-fx-background-radius: 10 10 10 10;");
+
+    private class ChatRunner implements Runnable{
+        private Conversation conversation = null;
+        private Iterator<Textable> messages = null;
+
+        @Override
+        public void run() {
+
+            while (isPlayButtonClicked) {
+                getConversation();
+                processConversations(rowIndex);
+                rowIndex++;
+            }
+        }
+
+        void processConversations(int rowIndex) {
+            try {
+                Textable message =  messages.next();
+                message.render(rowIndex, message);
+                Thread.sleep(spinnerCurrentValue * 1000);
+            }
+            catch (InterruptedException ex) {
+                Logger.getLogger(PlayerController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        private void getConversation()  {
+            if(canMoveToNextConversation()) {
+                try {
+                    conversation = chatManager.getNextConversation();
+                    messages = conversation.getMessages().iterator();
+                } catch (NoValidConversation noValidConversation) {
+                    noValidConversation.printStackTrace();
+                }
+            }
+        }
+
+        private boolean canMoveToNextConversation() {
+            return (conversation == null || !messages.hasNext()) && chatManager.hastNext();
+        }
     }
 
-    private void createUserMessageStyle(Label message)
-    {
-        message.setStyle("-fx-background-color: #DEDEDE; "
-                + "-fx-border-color: #DEDEDE;  "
-                + "-fx-border-radius: 10 10 10 10;\n"
-                + "-fx-background-radius: 10 10 10 10;");
-    }
 
 }
