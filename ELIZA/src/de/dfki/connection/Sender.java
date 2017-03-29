@@ -21,10 +21,11 @@ public class Sender {
     DatagramSocket senderSocket;
     DatagramPacket sendPacket;
     InetAddress inetAddress;
+    int remotePort = 9876;
     
-    
-    public  Sender()
+    public  Sender(int port )
     {
+        remotePort = port;
         try {
             inetAddress = InetAddress.getByName("localhost");
         } catch (UnknownHostException ex) {
@@ -37,7 +38,7 @@ public class Sender {
         byte[] sendData = message.getBytes();
         try {
             senderSocket = new DatagramSocket();
-            sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, 9876);
+            sendPacket = new DatagramPacket(sendData, sendData.length, inetAddress, remotePort);
             senderSocket.send(sendPacket);
         } catch (IOException ex) {
             Logger.getLogger(Sender.class.getName()).log(Level.SEVERE, null, ex);

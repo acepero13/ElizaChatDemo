@@ -27,6 +27,7 @@ import de.dfki.eliza.renderer.DummyRender;
 import de.dfki.eliza.renderer.Renderable;
 import de.dfki.eliza.renders.SystemRender;
 import de.dfki.eliza.renders.UserRender;
+import de.dfki.eliza.saSimulate.SA_Simulate;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,6 +66,8 @@ public class PlayerController implements Initializable
 
     private ElizaChatPlayer elizaChatPlayer;
     private ElizaReader elizaReader;
+    private SA_Simulate sa_Simulate;
+    private Boolean buttonLimit = true;
 
     private final int spinnerInitalValue = 1;
     private int spinnerCurrentValue = spinnerInitalValue;
@@ -99,7 +102,7 @@ public class PlayerController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        messageSender = new Sender();
+        messageSender = new Sender(9876);
         imagePath = getClass().getClassLoader().getResource("play.png").toExternalForm();
         image = new Image(imagePath);
         playImageView = new ImageView(image);
@@ -117,7 +120,12 @@ public class PlayerController implements Initializable
         
         liveChatButton.setOnAction((event) ->
         {
+            if (buttonLimit){
+            sa_Simulate = new SA_Simulate();
+            sa_Simulate.initial();
             handleLiveChatButton();
+            buttonLimit = false;
+            }
         });
 
         openFileButton.setOnAction((event) ->
