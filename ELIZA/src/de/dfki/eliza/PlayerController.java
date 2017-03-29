@@ -104,6 +104,7 @@ public class PlayerController implements Initializable
     Sender messageSender;
     String text = "";
     int rowIndex = 0;
+    private boolean isUser = false;
 
     private FadeTransition fadeMessage = new FadeTransition(Duration.millis(500));
     private FadeTransition fadePath = new FadeTransition(Duration.millis(500));
@@ -248,10 +249,10 @@ public class PlayerController implements Initializable
         liveChatStage.setX(600);
         liveChatStage.show();
     }
-    private boolean isUser = false;
 
     private void handleChatMessages()
     {
+        
         LinkedList<Conversation> conversations = elizaReader.getConversations();
         Iterator<Conversation> conversationIterator = conversations.iterator();
         Conversation conversation = conversationIterator.next();
@@ -264,6 +265,8 @@ public class PlayerController implements Initializable
         Iterator<Textable> finalMessageIterator = messageIterator;
         Thread t = new Thread(new Runnable()
         {
+            int sleepTime = 0;
+            
             @Override
             public void run()
             {
@@ -282,10 +285,12 @@ public class PlayerController implements Initializable
                         try
                         {
                             isUser = ((Message) m).isIsUserMessage();
+                            sleepTime = spinnerCurrentValue * 1000;
                         }
                         catch (ClassCastException ex)
                         {
                             text = "";
+                            sleepTime = 0;
                         }
                         messageSender.send(text);
                         if (conversationIterator.hasNext() && !messagesIt.hasNext())
@@ -369,7 +374,7 @@ public class PlayerController implements Initializable
 
                     try
                     {
-                        Thread.sleep(spinnerCurrentValue * 1000);
+                        Thread.sleep(sleepTime);
                     }
                     catch (InterruptedException ex)
                     {
