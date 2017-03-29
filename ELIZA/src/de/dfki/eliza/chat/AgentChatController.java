@@ -59,8 +59,6 @@ public class AgentChatController implements Initializable
     private TextArea agentInputtextArea;
     @FXML
     private Button agentSendButton;
-    
-   
 
     LiveSenderReceiver liveSenderReceiver;
     DatagramPacket dataPackage;
@@ -167,7 +165,7 @@ public class AgentChatController implements Initializable
     {
         String text = agentInputtextArea.getText();
         Path face;
-        if (!text.isEmpty())
+        if (!text.isEmpty() && dataPackage!=null)
         {
             Label message = new Label(text);
             message.setFont(new Font("Arial", 30));
@@ -207,6 +205,7 @@ public class AgentChatController implements Initializable
 
             liveSenderReceiver.sendString(dataPackage, message.getText());
             agentInputtextArea.setText("");
+
         }
     }
 
@@ -239,7 +238,7 @@ public class AgentChatController implements Initializable
 
         return p;
     }
-    
+
     public Path createLeftFace(Color color)
     {
         Path p = new Path();

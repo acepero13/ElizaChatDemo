@@ -9,11 +9,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +28,7 @@ public class LiveSenderReceiver
         try
         {
             mSocket = new DatagramSocket(mLocalPort);
-            
+
         }
         catch (SocketException ex)
         {
@@ -47,7 +44,7 @@ public class LiveSenderReceiver
             // Create the byte buffer
             final byte[] buffer = string.getBytes("UTF-8");
             // Create the UDP packet
-            
+
             final DatagramPacket packet = new DatagramPacket(buffer,
                     buffer.length, mDatagramPacket.getAddress(),
                     mDatagramPacket.getPort());

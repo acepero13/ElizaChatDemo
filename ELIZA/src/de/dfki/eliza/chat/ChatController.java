@@ -28,6 +28,14 @@ public class ChatController implements Initializable{
     private ScrollPane chatScrollPane;
     @FXML
     private ImageView emoImageView;
+    @FXML
+    private Label emoLabel1;
+    @FXML
+    private Label emoLabel2;
+    @FXML
+    private Label emoLabel3;
+    @FXML
+    private Label emoLabel4;
     
     private GridPane chatGridPane;
     
@@ -59,6 +67,26 @@ public class ChatController implements Initializable{
 
     public GridPane getChatGridPane() {
         return chatGridPane;
+    }
+
+    public Label getEmoLabel1()
+    {
+        return emoLabel1;
+    }
+
+    public Label getEmoLabel2()
+    {
+        return emoLabel2;
+    }
+
+    public Label getEmoLabel3()
+    {
+        return emoLabel3;
+    }
+
+    public Label getEmoLabel4()
+    {
+        return emoLabel4;
     }
     
     
