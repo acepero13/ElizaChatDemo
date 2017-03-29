@@ -59,6 +59,14 @@ public class AgentChatController implements Initializable
     private TextArea agentInputtextArea;
     @FXML
     private Button agentSendButton;
+    @FXML 
+    Label label1;
+    @FXML 
+    Label label2;
+    @FXML 
+    Label label3;
+    @FXML 
+    Label label4;
 
     LiveSenderReceiver liveSenderReceiver;
     DatagramPacket dataPackage;
